@@ -10,6 +10,8 @@ p {
   font-family: $font-family-sans-serif,
 }
 
+$link-color: #6096BA;
+
 /*-- scss:rules --*/
 .navbar {
   background-color: var(--bs-body-bg);
@@ -69,7 +71,7 @@ div.sidebar.sidebar-navigation.rollup.quarto-sidebar-toggle-contents, nav.sideba
 :root {
     --bs-default: #dee2e6;
     --bs-primary: #4F4F4F;
-    --bs-secondary: #3772ff;
+    --bs-secondary: #6096BA;
     --bs-success: #198754;
     --bs-info: #0dcaf0;
     --bs-warning: #ffc107;

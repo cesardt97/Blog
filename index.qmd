@@ -1,9 +1,26 @@
 ---
-title: "César Ivan Díaz Tavera"
+page-layout: full
 ---
+<br>
 
-Matemático, economista y curioso.
+::: {.grid}
 
-Este blog es un repositorio donde comparto ideas, códigos o artículos de opinión propia sobre temas que me parecen interesantes. Sientanse en la total libertad de contactarme si tienen una duda, desean debatir una idea o simplemente quieren conectar conmigo!
+::: {.g-col-12 .g-col-md-6 id='bio-pic'}
+![](profile2.jpg)
+:::
 
-\
+::: {.g-col-12 .g-col-md-6 id='text'}
+# César Iván Díaz Tavera
+
+Mathematician, economist & curious.
+
+This blog is a repository where I share ideas, codes or articles of my own opinion on topics that I find interesting. Feel free to contact me if you have a question, want to discuss an idea or just want to connect with me! 
+
+You can find me on [LinkedIn](www.linkedin.com/in/cesar-diaz-tavera),
+[GitHub](https://github.com/cesardt97) or reach out via [email](mailto:cesartavera.cloud@gmail.com).
+
+[**Read lastest posts**](home.qmd)
+
+:::
+
+:::

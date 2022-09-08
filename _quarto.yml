@@ -16,11 +16,9 @@ website:
             href: serie-credit-score.qmd
       - about.qmd
       - icon: github
-        href: https://github.com/
+        href: https://github.com/cesardt97
       - icon: linkedin
         href: www.linkedin.com/in/cesar-diaz-tavera
-      - icon: rss
-        href: index.xml
         
     left: 
       - home.qmd
