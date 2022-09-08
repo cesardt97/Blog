@@ -1,0 +1,115 @@
+// import google fonts
+@import 'https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap';
+@import 'https://fonts.googleapis.com/css2?family=Alegreya';
+
+// use Atkinson Hyperlegible font
+$font-family-sans-serif: "Atkinson Hyperlegible", Alegreya, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
+
+// default sans serif font
+p {
+  font-family: $font-family-sans-serif,
+}
+
+/*-- scss:rules --*/
+.navbar {
+  background-color: var(--bs-body-bg);
+  border-color: var(--bs-body-bg);
+} 
+.navbar-dark .navbar-nav .nav-link {
+    color: var(--bs-primary);
+}
+.navbar-dark .navbar-brand {
+    color: var(--bs-primary);
+}
+.nav-link.active {
+    color: var(--bs-primary);
+}
+.navbar #quarto-search.type-overlay .aa-Autocomplete svg.aa-SubmitIcon {
+    color: var(--bs-primary);
+}
+.navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link:focus, .navbar-dark .navbar-nav .nav-link.active, .navbar-dark .navbar-brand:hover, .navbar-dark .navbar-brand:focus, .navbar-dark .navbar-brand.active {
+    color: var(--bs-secondary);
+}
+.navbar-dark .navbar-toggler {
+    color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+.body {
+    margin: 0;
+    font-family: var(--bs-body-font-family);
+    font-size: var(--bs-body-font-size);
+    font-weight: var(--bs-body-font-weight);
+    line-height: var(--bs-body-line-height);
+    color: var(--bs-body-color);
+    text-align: var(--bs-body-text-align);
+    background-color: var(--bs-body-bg);
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+#quarto-appendix.default {
+    background-color: var(--bs-body-bg);
+}
+
+.sidebar.sidebar-navigation {
+    background-color: var(--bs-body-bg);
+}
+
+div.sidebar.sidebar-navigation.rollup.quarto-sidebar-toggle-contents, nav.sidebar.sidebar-navigation:not(.rollup) {
+    background-color: var(--bs-body-bg);
+}
+
+.card {
+    background-color: #F4F6F6;
+    background-clip: content-box;
+}
+
+// default colors
+:root {
+    --bs-default: #dee2e6;
+    --bs-primary: #4F4F4F;
+    --bs-secondary: #3772ff;
+    --bs-success: #198754;
+    --bs-info: #0dcaf0;
+    --bs-warning: #ffc107;
+    --bs-danger: #dc3545;
+    --bs-light: #f8f9fa;
+    --bs-dark: #212529;
+    --bs-default-rgb: 222, 226, 230;
+    --bs-primary-rgb: 13, 110, 253;
+    --bs-secondary-rgb: 108, 117, 125;
+    --bs-success-rgb: 25, 135, 84;
+    --bs-info-rgb: 13, 202, 240;
+    --bs-warning-rgb: 255, 193, 7;
+    --bs-danger-rgb: 220, 53, 69;
+    --bs-light-rgb: 248, 249, 250;
+    --bs-dark-rgb: 33, 37, 41;
+    --bs-white-rgb: 255, 255, 255;
+    --bs-black-rgb: 0, 0, 0;
+    --bs-body-color-rgb: 33, 37, 41;
+    --bs-body-bg-rgb: 255, 255, 255;
+    --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+    --bs-root-font-size: 18px;
+    --bs-body-font-family: var(--bs-font-sans-serif);
+    --bs-body-font-size: 1rem;
+    --bs-body-font-weight: 400;
+    --bs-body-line-height: 1.5;
+    --bs-body-color: #212529;
+    --bs-body-bg: #f6f4f4;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

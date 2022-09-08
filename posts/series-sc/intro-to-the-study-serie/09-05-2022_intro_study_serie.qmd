@@ -1,0 +1,72 @@
+---
+title: "Introduction to the study serie: key concepts to understand credit scoring"
+description: "The aim is to explain basic economic concepts in order to understand more fluently why a credit score is important."
+author: 
+  - name: César Díaz Tavera
+    email: cesartavera97@gmail.com
+  - name: Juan Quiñonez Wu
+    email: jquinonez@gmail.com
+date: "2022-09-05"
+categories: [Credit Score, Economics, Information Asymmetry, Banking]
+image: "sc.png"
+citation:
+  url: https://cesardt97.github.io/Blog/posts/my-first-blog
+params:
+  slug: key-concepts-credit-score
+  date: 2022-09-05
+---
+
+```{r blogtheme, echo=FALSE, message=FALSE, warning=FALSE,include=FALSE}
+setwd('D:/USERDATA/2016061/OneDrive - BCRD/Documents/Blog/Blog-master')
+source('blog_theme.R')
+```
+
+## **Definition of terms**
+
+Adverse selection is a pre-contractual asymmetric information which often leads to making bad decisions, such as doing more business with less-profitable or riskier business. In the banking set up, it may involve extending credit facilities to a borrower with high likelihood of default[^1].
+
+[^1]: this is a footnote
+
+Asymmetric information is known as information failure and occurs when one party to an economic transaction possesses greater and material knowledge over the other party. This often manifested typically[^2] where the seller of a good or service possesses greater knowledge than the buyer.
+
+[^2]: Here is a foot note
+
+Moral hazard on the other is post-contractual asymmetric information which occurs whenever a borrower engages in behaviors that are not in the best interest of the lender for example a borrower[^3] diverting use a bank loan to buy lottery tickets instead of purchase of merchandise for resale, as agreed upon with the lender. It is also moral hazard if a borrower fails to repay a loan when especially in a case where the facility is unsecured knowing well that the bank stands to lose.
+
+[^3]: Here's one with multiple blocks.
+
+    Subsequent paragraphs are indented to show that they belong to the previous footnote.
+
+        { some.code }
+
+    The whole paragraph can be indented, or just the first line. In this way, multi-paragraph footnotes work like multi-paragraph list items.
+
+Free-rider problems refers to a situation where an agent that collects information about a particular risk may be unable to prevent other agents from using that information for example a deposit insurance institution that is unable to price risk accurately.
+
+Rational herding refers to a situation whereby an agents choosing to disregard their own information and instead react to information on the decisions taken by other agents (information externalities).
+
+## Implications whatever
+
+Information asymmetry between lenders and borrowers plays a key role in the field of finance and banking as one of the vital causes of financial frictions. Lenders do not know the creditworthiness of borrowers (hidden information) or cannot detect inefficient behavior of borrowers after lending (hidden action). For fear of lending to borrowers with poor credit worthiness or those that take inefficient behavior, lenders are unwilling to provide their own funds, which creates severe financial frictions. This is the problem of adverse selection (in the case of hidden information), or of moral hazard (in the case of hidden action).
+
+Presence of asymmetric information in the banking industry gives rise to wrong pricing patterns and selections. An asymmetric information-intensive market progressively draws away from being effective and fully competitive.
+
+In credit markets, asymmetric information avoids accurate transfer of the funds, and makes it difficult to both effectively utilize the savings and efficiently finance the investments. Proper pricing and transfer to the prospective investors of the funds is only possible if the parties have full and accurate information of each other. Otherwise, investments could not be financed at appropriate conditions, and results that would adversely impact the growth of national economy might arise.
+
+### Preliminares: librerias usadas, datos y análisis de los retornos
+
+```{r librerias, echo=TRUE, message=FALSE, warning=FALSE, out.width = '800px', dpi=200}
+library(ggplot2)
+
+mtcars |> 
+  ggplot(aes(x = mpg, y = wt)) +
+  geom_point(color = "black") +
+# scale_fill_manual(values = c("#F4F4F4")) +
+  labs(x="Fuel efficiency (mpg)", y="Weight (tons)",
+       title="Seminal ggplot2 scatterplot example",
+       subtitle="A plot that is only useful for demonstration purposes",
+       caption="Source: author's elaboration") +
+  theme_blog() 
+```
+
+#### **Appendix**

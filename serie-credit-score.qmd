@@ -1,0 +1,19 @@
+---
+title: "Credit Score Series"
+subtitle: "Here is a list of posts about Credit Score"
+image: "sc.png"
+draft: false
+listing:
+    contents: posts/series-sc
+    type: default
+    fields: [image, date, title, subtitle, categories, author, reading-time]  
+    sort: "date desc"
+    categories: false
+    sort-ui: false
+    filter-ui: false
+    page-size: 4
+    
+page-layout: full
+title-block-banner: false
+toc: false
+---

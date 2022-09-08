@@ -1,0 +1,33 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "César Díaz"
+  site-url: https://cesardt97.github.io
+  repo-url: https://github.com/cesardt97/Blog
+  open-graph: true
+  description: "A blog to talk about things I find interesting."
+  navbar:
+    right:
+      - text: Series
+        menu:
+          - text: Credit Score
+            href: serie-credit-score.qmd
+      - about.qmd
+      - icon: github
+        href: https://github.com/
+      - icon: linkedin
+        href: www.linkedin.com/in/cesar-diaz-tavera
+      - icon: rss
+        href: index.xml
+        
+    left: 
+      - home.qmd
+format:
+  html:
+    theme: custom.scss
+    css: styles.css
+
+editor: visual
+

@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.0.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="César Díaz Tavera">
+<meta name="dcterms.date" content="2022-08-30">
+<meta name="description" content="GARCH models proposed by Bollerslev (1986) are used to analyze the historical variance of the S&amp;P500 stock index in order to find the periods of low and high sustained volatility in its returns. Likewise, a theoretical exercise on volatility predictions and asset allocation in a portfolio by means of volatility targets is developed, in the light of Tobin’s two-fund separation theorem.">
+
+<title>César Díaz - Analyzing the volatility of the Standard and Poor’s 500</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+<script src="../../site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="César Díaz - Analyzing the volatility of the Standard and Poor’s 500">
+<meta property="og:description" content="GARCH models proposed by Bollerslev (1986) are used to analyze the historical variance of the S&amp;P500 stock index in order to find the periods of low and high sustained volatility in its returns. Likewise, a theoretical exercise on volatility predictions and asset allocation in a portfolio by means of volatility targets is developed, in the light of Tobin’s two-fund separation theorem.">
+<meta property="og:image" content="https://cesardt97.github.io/posts\volatility-financial-asset\financial-econometrics.png">
+<meta property="og:site-name" content="César Díaz">
+<meta property="og:image:height" content="960">
+<meta property="og:image:width" content="1344">
+</head>
+
+<body class="floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">César Díaz</span>
+  </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../home.html">Blog</a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-series" role="button" data-bs-toggle="dropdown" aria-expanded="false">Series</a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-series">    
+        <li>
+    <a class="dropdown-item" href="../../serie-credit-score.html">
+ <span class="dropdown-text">Credit Score</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">About</a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"><i class="bi bi-github" role="img">
+</i> 
+ </a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../www.linkedin.com/in/cesar-diaz-tavera"><i class="bi bi-linkedin" role="img">
+</i> 
+ </a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"><i class="bi bi-rss" role="img">
+</i> 
+ </a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><strong>Introduction</strong></a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
+  <ul class="collapse">
+  <li><a href="#preliminary-libraries-used-data-wrangling-and-analysis-of-returns" id="toc-preliminary-libraries-used-data-wrangling-and-analysis-of-returns" class="nav-link" data-scroll-target="#preliminary-libraries-used-data-wrangling-and-analysis-of-returns">Preliminary: libraries used, data wrangling and analysis of returns</a></li>
+  <li><a href="#specification-of-the-conditional-variance-and-conditional-error-distribution" id="toc-specification-of-the-conditional-variance-and-conditional-error-distribution" class="nav-link" data-scroll-target="#specification-of-the-conditional-variance-and-conditional-error-distribution">Specification of the conditional variance and conditional error distribution</a></li>
+  <li><a href="#the-mean-model" id="toc-the-mean-model" class="nav-link" data-scroll-target="#the-mean-model">The mean model</a></li>
+  <li><a href="#extension-of-the-analysis-of-the-volatility-dynamics-of-sp500-returns." id="toc-extension-of-the-analysis-of-the-volatility-dynamics-of-sp500-returns." class="nav-link" data-scroll-target="#extension-of-the-analysis-of-the-volatility-dynamics-of-sp500-returns.">Extension of the analysis of the volatility dynamics of SP500 returns.</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Analyzing the volatility of the Standard and Poor’s 500</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+  <div class="quarto-categories">
+    <div class="quarto-category">Financial Econometric</div>
+    <div class="quarto-category">GARCH</div>
+    <div class="quarto-category">Volatility</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    <p>GARCH models proposed by Bollerslev (1986) are used to analyze the historical variance of the S&amp;P500 stock index in order to find the periods of low and high sustained volatility in its returns. Likewise, a theoretical exercise on volatility predictions and asset allocation in a portfolio by means of volatility targets is developed, in the light of Tobin’s two-fund separation theorem.</p>
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>César Díaz Tavera </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">August 30, 2022</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction"><strong>Introduction</strong></h2>
+<p>Modern portfolio theory was introduced by Nobel Prize-winning economist Henry Markowitz in 1952 with his essay ‘Portfolio Selection’ published in the <em>Journal of Finance</em>. Fundamentally, this theory assumes that the trade-off between return and risk<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> of financial assets should not be considered on an individual basis (which was the consensus advice at the time), but that the trade-off should be considered from the portfolio as a whole. In other words, investors should focus on selecting portfolios, rather than building their portfolios from the individual selection of attractive assets. Out of the entire universe of possible portfolios, some will optimally balance risk and reward. These optimal portfolios form what Markowitz called the <em>efficient frontier</em>. Thus, Markowitz (1952) proposed a mathematical model for <strong>diversification</strong>.</p>
+<p>However, Henry Markowitz only considered risky assets in his theory. James Tobin (1958) extended Markowitz’s work by adding a risk-free asset to the analysis, which led to the emergence of the concepts of the ‘super-efficient portfolio’ and the ‘capital market line’. Because they are leveraged, portfolios on the capital market line can outperform portfolios on the efficient frontier (Glyn Horton, 2013). Therefore, under Tobin’s perspective, investors should diversify their portfolio by investing a <span class="math inline">\(w\)</span> proportion of their wealth in a risky asset and a <span class="math inline">\(1-w\)</span> proportion in risk-free assets.</p>
+<p>In this paper we make use of the General Conditional Heteroskedasticity models proposed by Bollerslev (1986), to analyze in depth the historical variance of the <em>Standard and Poor’s 500</em> stock index in order to find the periods of sustained low and high volatility in its returns. Thus, with the knowledge about the behavior of these volatility clusters, a theoretical exercise is proposed on the volatility predictions of the model to the asset allocation in a portfolio by means of volatility targeting, in the light of Tobin’s two-fund separation theorem.</p>
+</section>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results</h2>
+<section id="preliminary-libraries-used-data-wrangling-and-analysis-of-returns" class="level3">
+<h3 class="anchored" data-anchor-id="preliminary-libraries-used-data-wrangling-and-analysis-of-returns">Preliminary: libraries used, data wrangling and analysis of returns</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Wrangling data</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Financial analysis, time series and Volatility</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quantmod)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xts)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PerformanceAnalytics)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rugarch)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># For tables</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Visually, one can observe how the volatility of returns changes over time. You see that periods of large returns (positive or negative) tend to be followed by large returns, while low returns are followed by low returns. So you can see these periods of sustained high or low volatility, known as volatility clusters.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Upload the data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>sp500prices <span class="ot">&lt;-</span> <span class="fu">getSymbols</span>(<span class="st">"^GSPC"</span>,<span class="at">auto.assign =</span> <span class="cn">FALSE</span>, <span class="at">from =</span> <span class="st">"1989-01-03"</span>, <span class="at">to =</span> <span class="fu">as.Date</span>(<span class="st">"2022-03-18"</span>))<span class="sc">$</span><span class="st">'GSPC.Close'</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(sp500prices) <span class="ot">&lt;-</span> <span class="st">'SP500'</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate daily returns</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>sp500ret <span class="ot">&lt;-</span> <span class="fu">CalculateReturns</span>(sp500prices)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>sp500ret <span class="ot">&lt;-</span> sp500ret[<span class="sc">-</span><span class="dv">1</span>,]</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>line_zero <span class="ot">&lt;-</span> sp500ret</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>line_zero<span class="sc">$</span>zero <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Graph the price and return series of the S&amp;P500</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>graf_returns <span class="ot">&lt;-</span> <span class="fu">plot</span>(sp500ret, <span class="at">main =</span> <span class="st">"Daily returns: S&amp;P500"</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>graf_returns <span class="ot">&lt;-</span> <span class="fu">addSeries</span>(line_zero[, <span class="st">"zero"</span>], <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">on =</span> <span class="dv">1</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sp500prices, <span class="at">main =</span> <span class="st">"Daily prices: S&amp;P500"</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>graf_returns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="2022-08-30_volatility_financial_asset_files/figure-html/datos-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating annualized volatilities in years close to economic crises</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>sd_annualized <span class="ot">&lt;-</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>(<span class="fu">cbind</span>(<span class="st">"2008"</span> <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="dv">252</span>)<span class="sc">*</span><span class="fu">sd</span>(sp500ret[<span class="st">"2008"</span>]), </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2009"</span> <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="dv">252</span>)<span class="sc">*</span><span class="fu">sd</span>(sp500ret[<span class="st">"2009"</span>]), </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2017"</span> <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="dv">252</span>)<span class="sc">*</span><span class="fu">sd</span>(sp500ret[<span class="st">"2017"</span>]), </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2018"</span> <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="dv">252</span>)<span class="sc">*</span><span class="fu">sd</span>(sp500ret[<span class="st">"2018"</span>]), </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2019"</span> <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="dv">252</span>)<span class="sc">*</span><span class="fu">sd</span>(sp500ret[<span class="st">"2019"</span>]), </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2020"</span> <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="dv">252</span>)<span class="sc">*</span><span class="fu">sd</span>(sp500ret[<span class="st">"2020"</span>]), </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2021"</span> <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="dv">252</span>)<span class="sc">*</span><span class="fu">sd</span>(sp500ret[<span class="st">"2021"</span>]),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"total"</span><span class="ot">=</span> <span class="fu">sqrt</span>(<span class="dv">252</span>)<span class="sc">*</span><span class="fu">sd</span>(sp500ret, <span class="at">na.rm =</span> T)))</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(sd_annualized, <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">"Calculating annualized volatilities in years close to economic crises"</span>, <span class="at">booktabs =</span> T) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>Calculating annualized volatilities in years close to economic crises</caption>
+ <thead>
+  <tr>
+   <th style="text-align:right;"> 2008 </th>
+   <th style="text-align:right;"> 2009 </th>
+   <th style="text-align:right;"> 2017 </th>
+   <th style="text-align:right;"> 2018 </th>
+   <th style="text-align:right;"> 2019 </th>
+   <th style="text-align:right;"> 2020 </th>
+   <th style="text-align:right;"> 2021 </th>
+   <th style="text-align:right;"> total </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 0.4097 </td>
+   <td style="text-align:right;"> 0.2729 </td>
+   <td style="text-align:right;"> 0.0669 </td>
+   <td style="text-align:right;"> 0.1705 </td>
+   <td style="text-align:right;"> 0.1247 </td>
+   <td style="text-align:right;"> 0.3443 </td>
+   <td style="text-align:right;"> 0.131 </td>
+   <td style="text-align:right;"> 0.1798 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>Volatility fluctuations over different time periods can be observed by means of the 1-month and 3-month rolling volatility:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1-month rolling annualized volatility estimate</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">chart.RollingPerformance</span>(<span class="at">R =</span> sp500ret[<span class="st">"2000::2022"</span>], <span class="at">width =</span> <span class="dv">22</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">FUN =</span> <span class="st">"sd.annualized"</span>, <span class="at">scale =</span> <span class="dv">252</span>, <span class="at">main =</span> <span class="st">"1-month rolling volatility"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3-months rolling annualized volatility estimate</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">chart.RollingPerformance</span>(<span class="at">R =</span> sp500ret[<span class="st">"2000::2022"</span>], <span class="at">width =</span> <span class="dv">3</span><span class="sc">*</span><span class="dv">22</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                         <span class="at">FUN =</span> <span class="st">"sd.annualized"</span>, <span class="at">scale =</span> <span class="dv">252</span>, <span class="at">main =</span> <span class="st">"3-month rolling volatility"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="2022-08-30_volatility_financial_asset_files/figure-html/Rolling%20volatility-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>As can be seen, the volatility of S&amp;P500 returns varies over time and may depend on past variance, so to study its dynamics a process is needed that allows the conditional variance to change over time as a function of past errors, in the manner of the autoregressive conditional heteroscedasticity (ARCH) model proposed by Engle (1982), and the subsequent generalization (GARCH) that allows for a longer memory in the model and a more flexible lag structure (Bollerslev, 1986).</p>
+<p>When developing conditional heteroscedasticity models, the specifications for the equations for the conditional mean, conditional variance and conditional error distribution should be kept in mind.</p>
+</section>
+<section id="specification-of-the-conditional-variance-and-conditional-error-distribution" class="level3">
+<h3 class="anchored" data-anchor-id="specification-of-the-conditional-variance-and-conditional-error-distribution">Specification of the conditional variance and conditional error distribution</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specification of the Standard GARCH model</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>garchspec <span class="ot">&lt;-</span> <span class="fu">ugarchspec</span>(<span class="at">mean.model =</span> <span class="fu">list</span>(<span class="at">armaOrder =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)),</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">variance.model =</span> <span class="fu">list</span>(<span class="at">model =</span> <span class="st">"sGARCH"</span>), </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">distribution.model =</span> <span class="st">"norm"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>garchfit <span class="ot">&lt;-</span> <span class="fu">ugarchfit</span>(<span class="at">data =</span> sp500ret, <span class="at">spec =</span> garchspec)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain the estimated volatility </span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>garchvol <span class="ot">&lt;-</span> <span class="fu">sigma</span>(garchfit)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(garchvol, <span class="at">main =</span> <span class="st">"Estimated Volatility"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="2022-08-30_volatility_financial_asset_files/figure-html/a%20simple%20model-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the unconditional volatility and standardized returns.</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">sqrt</span>(<span class="fu">uncvariance</span>(garchfit)), <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">booktabs =</span> T,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">col.names =</span><span class="st">"Unconditional inflation volatility"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<table>
+ <thead>
+  <tr>
+   <th style="text-align:right;"> Unconditional inflation volatility </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 0.0109 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>stdret <span class="ot">&lt;-</span> <span class="fu">residuals</span>(garchfit, <span class="at">standardize =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visual comparison of error distribution</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chart.Histogram</span>(stdret, <span class="at">methods =</span> <span class="fu">c</span>(<span class="st">"add.normal"</span>,<span class="st">"add.density"</span>), </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">colorset =</span> <span class="fu">c</span>(<span class="st">"gray"</span>,<span class="st">"red"</span>,<span class="st">"blue"</span>), </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">main =</span> <span class="st">"Distribution of standardized returns vs. normal dist."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="2022-08-30_volatility_financial_asset_files/figure-html/error%20distribution%20comparison-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Due to the presence of extreme events, the empirical distribution of the returns have thick tails, so the normality assumption may be inadequate and may have generated biased estimators. Considering that the distribution of the standardized returns does not follow a normal distribution, as they have excess kurtosis, thicker tails and an asymmetric effect, setting a t-Student distribution with skewness instead of a normal distribution for the specification of the conditional error distribution leads to a more realistic GARCH model.</p>
+<p>On the other hand, when there is a leverage effect, negative news about returns (negative shocks) affect the variance more than positive news (positive shocks). Because of the asymmetric effect of the distribution, a gjr-GARCH model is applied to confirm a possible leverage effect. In this model, an asymmetric variance response to positive and negative news is allowed for by assigning more weight on negative news by taking <span class="math inline">\((\alpha + \gamma)*\varepsilon_t^2\)</span> when <span class="math inline">\(\varepsilon_t \le 0\)</span> instead of only <span class="math inline">\(\alpha*\varepsilon_t^2\)</span> when <span class="math inline">\(\varepsilon_t &gt; 0\)</span>. The news impact curve is a useful tool for visualizing the response of variance to surprise in returns.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># GJR-GARCH Specification</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>gjrgarchspec <span class="ot">&lt;-</span> <span class="fu">ugarchspec</span>(<span class="at">mean.model =</span> <span class="fu">list</span>(<span class="at">armaOrder =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)),</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">variance.model =</span> <span class="fu">list</span>(<span class="at">model =</span> <span class="st">"gjrGARCH"</span>),</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">distribution.model =</span> <span class="st">"sstd"</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>gjrgarchfit <span class="ot">&lt;-</span> <span class="fu">ugarchfit</span>(<span class="at">data =</span> sp500ret, <span class="at">spec =</span> gjrgarchspec)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain the estimated volatility </span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>gjrgarchvol_mean <span class="ot">&lt;-</span> <span class="fu">fitted</span>(gjrgarchfit)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>gjrgarchvol <span class="ot">&lt;-</span> <span class="fu">sigma</span>(gjrgarchfit)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare estimated volatilities</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>plotvol <span class="ot">&lt;-</span> <span class="fu">plot</span>(<span class="fu">abs</span>(sp500ret), <span class="at">col =</span> <span class="st">"grey"</span>, </span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>                <span class="at">main =</span> <span class="st">"Estimated returns and volatilities"</span>)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>plotvol <span class="ot">&lt;-</span> <span class="fu">addSeries</span>(gjrgarchvol, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">on=</span><span class="dv">1</span>)</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>plotvol <span class="ot">&lt;-</span> <span class="fu">addSeries</span>(garchvol, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">on=</span><span class="dv">1</span>)</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>plotvol</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="2022-08-30_volatility_financial_asset_files/figure-html/GJR-Garch-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># News Curve</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gjrgarchfit, <span class="at">which =</span> <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="2022-08-30_volatility_financial_asset_files/figure-html/News%20Curve-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>An asymmetric leverage effect can be seen in the figure above. From it we conclude that the conditional variance reaction is greater to past negative shocks than to past positive shocks of the same magnitude in S&amp;P500 returns. So much so, that the market is relatively insensitive to positive shocks compared to the increase and sensitivity of volatility that accompanies negative shocks with a further decline in prices.</p>
+<p><strong>Model selection based on information criteria</strong></p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># log-likelihood of both models</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>likelihood <span class="ot">&lt;-</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">Garch =</span> <span class="fu">likelihood</span>(garchfit), <span class="at">gjrGarch =</span> <span class="fu">likelihood</span>(gjrgarchfit))</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(likelihood) <span class="ot">&lt;-</span> <span class="st">"Log-Likelihood"</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Information criteria</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>information_criteria <span class="ot">&lt;-</span> </span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">Garch =</span> <span class="fu">infocriteria</span>(garchfit), <span class="at">gjrGarch =</span> <span class="fu">infocriteria</span>(gjrgarchfit))</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(information_criteria) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Garch"</span>, <span class="st">"gjrGarch"</span>)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">rbind</span>(information_criteria, likelihood), <span class="at">booktabs =</span> T,</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Garch"</span>, <span class="st">"gjrGarch"</span>),</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">format =</span> <span class="st">"latex"</span>,</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">caption =</span> <span class="st">"Information Criteria for Conditional Heteroscedasticity Models"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> T, <span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">"hold_position"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+</div>
+</div>
+<p>Based on the information criteria, it is concluded that the GJR-GARCH model with t-Student distribution is a more adequate and realistic model than a simple model with normal distribution.</p>
+</section>
+<section id="the-mean-model" class="level3">
+<h3 class="anchored" data-anchor-id="the-mean-model">The mean model</h3>
+<p>Modeling the dynamics of the conditional mean generally has a large effect on estimated returns, but only a small effect on volatility predictions. Financial econometrics theory suggests that the effect can be so minimal, that if the interest is only in the volatility dynamics, one can generally ignore the mean dynamics and assume a simple constant mean specification to save parsimony. To confirm that this is the case, we will consider an AR(1) model and a GARCH model in mean to see how the volatilities are related.</p>
+<p>In the AR(1) model, the sign of the autoregressive parameter depends on the market reaction to the news <span class="math inline">\(\mu_t = \mu + \rho(R_{t-1} - \mu)\)</span>. A positive value of <span class="math inline">\(\rho\)</span> is consistent with the interpretation that markets underreact to news, leading to momentum in returns (above-average returns are followed by above-average returns). A negative value of <span class="math inline">\(|rho\)</span> is consistent with the interpretation that markets overreact to news, leading to a reversal in returns (above-average returns are followed by below-average returns). In any case, if <span class="math inline">\(||rho|&lt;1\)</span>, then deviations of returns from their long-term mean (<span class="math inline">\(\mu\)</span>) are transitory.</p>
+<p>So the question arises: are the daily returns of the S&amp;P500 characterized by momentum or a reversal effect in its AR(1) dynamics?</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># AR(1) specification of an asymmetric GARCH</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>argarchspec <span class="ot">&lt;-</span> <span class="fu">ugarchspec</span>(<span class="at">mean.model =</span> <span class="fu">list</span>(<span class="at">armaOrder =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>)),</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">variance.model =</span> <span class="fu">list</span>(<span class="at">model =</span> <span class="st">"gjrGARCH"</span>),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">distribution.model =</span> <span class="st">"sstd"</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>argarchfit <span class="ot">&lt;-</span> <span class="fu">ugarchfit</span>(<span class="at">data =</span>  sp500ret, <span class="at">spec =</span> garchspec)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Coefficients of the mean model</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">coef</span>(argarchfit)[<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)], <span class="at">digits =</span> <span class="dv">6</span>, <span class="at">booktabs =</span> T, <span class="at">format.args =</span> <span class="fu">list</span>(<span class="at">scientific =</span> <span class="cn">FALSE</span>), <span class="at">col.names =</span><span class="st">"Coeficientes del modelo GARCH con una especificación AR(1) en la media condicional"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<table>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> Coeficientes del modelo GARCH con una especificación AR(1) en la media condicional </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> mu </td>
+   <td style="text-align:right;"> 0.000642 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> omega </td>
+   <td style="text-align:right;"> 0.000002 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mean and volatility of the AR(1) model</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>ar1_mean <span class="ot">&lt;-</span> <span class="fu">fitted</span>(argarchfit)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>ar1_vol <span class="ot">&lt;-</span> <span class="fu">sigma</span>(argarchfit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Since the AR(1) coefficient in the mean model is negative, we find a reversal effect in terms of predicted return. After an above-average return, we expect a below-average return. And after below-average return, we expect above-average return. Also, since this coefficient is close to zero, deviations from daily returns are transitory.</p>
+<p>In contrast to the use of an ARMA model for the mean, we have that a GARCH model in mean does not make use of the autocorrelation of returns. Instead, it exploits the relationship between the expected return and the variance of the return. The higher the risk in terms of variance, the higher the expected return of the investment should be. So it is a model that quantifies the trade-off between risk and reward.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specification of a GARCH in mean</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>gim_garchspec <span class="ot">&lt;-</span> <span class="fu">ugarchspec</span>( </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean.model =</span> <span class="fu">list</span>(<span class="at">armaOrder =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">archm =</span> <span class="cn">TRUE</span>, <span class="at">archpow =</span> <span class="dv">2</span>),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">variance.model =</span> <span class="fu">list</span>(<span class="at">model =</span> <span class="st">"gjrGARCH"</span>), </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">distribution.model =</span> <span class="st">"sstd"</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>gim_garchfit <span class="ot">&lt;-</span> <span class="fu">ugarchfit</span>(<span class="at">data =</span> sp500ret , <span class="at">spec =</span> gim_garchspec)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Mean and volatility of the AR(1) model</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>gim_mean <span class="ot">&lt;-</span> <span class="fu">fitted</span>(gim_garchfit)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>gim_vol <span class="ot">&lt;-</span> <span class="fu">sigma</span>(gim_garchfit)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlation between the estimated returns of the AR(1) model and the average model</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">cor</span>(ar1_mean, gim_mean), </span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">col.names =</span> <span class="st">"Correlación entre los retornos estimados del modelo Garch-AR(1) y el modelo Garch en media"</span>, <span class="at">format =</span> <span class="st">"latex"</span>, <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">booktabs =</span> T) <span class="sc">%&gt;%</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlation between the estimated returns of the mean model and the AR(1) model</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>model_correlation <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">cor</span>(<span class="fu">merge</span>(gjrgarchvol, ar1_vol, gim_vol)))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(model_correlation) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"gjrGarch"</span>, <span class="st">"AR(1)"</span>, <span class="st">"Garch in mean"</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(model_correlation) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"gjrGarch"</span>, <span class="st">"AR(1)"</span>, <span class="st">"Garch in mean"</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(model_correlation, <span class="at">booktabs =</span> T,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">format =</span> <span class="st">"latex"</span>,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">caption =</span> <span class="st">"Correlation between estimated volatilities for different specifications of Garch models"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+</div>
+</div>
+<p>There is a large disagreement between the predicted returns obtained with the Garch-AR(1) and GARCH models on average, as evidenced by the low correlation. Because the mean return is close to zero for daily returns, these differences in mean prediction have little impact on volatility predictions. Their correlation is almost one. Since we are only interested in volatility dynamics, and to keep parsimony, we will estimate GARCH models with constant mean.</p>
+</section>
+<section id="extension-of-the-analysis-of-the-volatility-dynamics-of-sp500-returns." class="level3">
+<h3 class="anchored" data-anchor-id="extension-of-the-analysis-of-the-volatility-dynamics-of-sp500-returns.">Extension of the analysis of the volatility dynamics of SP500 returns.</h3>
+<p>In the past graphs, we observed how financial return volatility is clustered over time: periods of above-average volatility are followed by periods of below-average volatility. In the long term, it is expected that:</p>
+<ul>
+<li>When volatility is high, volatility will decline and return to its long-term average.</li>
+<li>When volatility is low, volatility will increase and return to its long-term average.</li>
+</ul>
+<p>In the estimation of GARCH models we can exploit this mean-reverting behavior of volatility by volatility targeting and confirm that the long-run volatility implied by the GARCH model is equal to the sample standard deviation.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specification for variance targeting</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>targarchspec <span class="ot">&lt;-</span> <span class="fu">ugarchspec</span>(<span class="at">mean.model =</span> <span class="fu">list</span>(<span class="at">armaOrder =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)),</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">variance.model =</span> <span class="fu">list</span>(<span class="at">model =</span> <span class="st">"gjrGARCH"</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">variance.targeting =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">distribution.model =</span> <span class="st">"sstd"</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>targarchfit <span class="ot">&lt;-</span> <span class="fu">ugarchfit</span>(<span class="at">data =</span> sp500ret, <span class="at">spec =</span> targarchspec)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>targarchvol <span class="ot">&lt;-</span> <span class="fu">sigma</span>(targarchfit)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare against gjrGarch</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co"># log-likelihood of the two models</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>likelihood_2 <span class="ot">&lt;-</span> </span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">gjrGarch =</span> <span class="fu">likelihood</span>(gjrgarchfit), <span class="at">tarGarch =</span> <span class="fu">likelihood</span>(targarchfit))</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(likelihood_2) <span class="ot">&lt;-</span> <span class="st">"Log-Likelihood"</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Information criteria</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>information_criteria_2 <span class="ot">&lt;-</span> </span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">gjrGarch =</span> <span class="fu">infocriteria</span>(gjrgarchfit), <span class="at">tarGarch =</span> <span class="fu">infocriteria</span>(targarchfit))</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(information_criteria_2) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"gjrGarch"</span>, <span class="st">"tarGarch"</span>)</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">rbind</span>(information_criteria_2, likelihood_2), <span class="at">booktabs =</span> T,</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"gjrGarch"</span>, <span class="st">"Volatility targeting gjrGarch"</span>),</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">format =</span> <span class="st">"latex"</span>,</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">caption =</span> <span class="st">"Information Criteria for GARCH models with volatility targeting"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> T, <span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">"hold_position"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Implied long term volatility</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">data.frame</span>(<span class="at">Garch =</span> <span class="fu">sqrt</span>(<span class="fu">uncvariance</span>(garchfit)), </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">tarGarch =</span> <span class="fu">sqrt</span>(<span class="fu">uncvariance</span>(targarchfit))), </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Simple GARCH model"</span>, <span class="st">"GJR-Garch model with volatility targeting"</span>), </span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">format =</span> <span class="st">"latex"</span>, <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">booktabs =</span> T,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">caption =</span> <span class="st">"Implied long-term volatility"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> T, <span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">"hold_position"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+</div>
+</div>
+<p>The models that have been studied so far lead to an in-sample volatility estimate obtained by estimating the GARCH model only once and using the full time series, which can cause bias (look-ahead bias). However, in moving window models these biases are avoided by conditioning the estimation to use only the returns available at the previous time of estimation. That is, the model would be re-estimated in each window using only the yields that are actually observable at the time of estimation.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specification for garch on movable windows</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>rollgarchspec <span class="ot">&lt;-</span> <span class="fu">ugarchspec</span>(<span class="at">mean.model =</span> <span class="fu">list</span>(<span class="at">armaOrder =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)),</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">variance.model =</span> <span class="fu">list</span>(<span class="at">model =</span> <span class="st">"gjrGARCH"</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">variance.targeting =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">distribution.model =</span> <span class="st">"sstd"</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>rollgarchfit <span class="ot">&lt;-</span> <span class="fu">ugarchroll</span>(garchspec, </span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">data =</span> sp500ret,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>                           <span class="at">n.start =</span> <span class="dv">2000</span>, <span class="at">refit.window =</span> <span class="st">"moving"</span>,  <span class="at">refit.every =</span> <span class="dv">500</span>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Mobile predictions</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(rollgarchfit)</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparison of the estimated volatility in the in-sample model and the moving model</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>garchvolroll <span class="ot">&lt;-</span> <span class="fu">xts</span>(preds<span class="sc">$</span>Sigma, <span class="at">order.by =</span> <span class="fu">as.Date</span>(<span class="fu">rownames</span>(preds)))</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>volplot <span class="ot">&lt;-</span> <span class="fu">plot</span>(gjrgarchvol, <span class="at">col =</span> <span class="st">"darkgrey"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>, </span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>                <span class="at">main =</span> <span class="st">"In-sample and moving window volatility forecasts"</span>)</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>volplot <span class="ot">&lt;-</span> <span class="fu">addSeries</span>(garchvolroll, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">on =</span> <span class="dv">1</span>)</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(volplot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="2022-08-30_volatility_financial_asset_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Tactical Asset Allocation using Target Volatility** **Targeted Volatility</p>
+<p>GARCH volatility predictions have a direct practical use in portfolio allocation. According to James Tobin’s two-fund separation theorem, you should invest a proportion w of your wealth in a risky portfolio and the remainder in a risk-free asset, such as a U.S. Treasury bill. If you target a portfolio with an annualized volatility of 5%, and the annualized volatility of the risky asset is w, then you should invest (0.05/w) in the risky asset, in this case, the S&amp;P500.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Annualized volatility from gjrGARCH moving window model with </span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># asymmetric t-Student distribution</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>estimated_annualized_volatility <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">252</span>)<span class="sc">*</span>garchvolroll</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the weights assigned to the risky asset with a target volatility of 5% per year. </span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>weight <span class="ot">&lt;-</span> <span class="fl">0.05</span> <span class="sc">/</span> estimated_annualized_volatility</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare the annualized volatility with the portfolio's weights</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">merge</span>(estimated_annualized_volatility, weight), <span class="at">multi.panel =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Annualized vol. and the risk asset allocation weights"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="2022-08-30_volatility_financial_asset_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>In the above chart it is easy to observe the dynamics of asset allocation within a portfolio. In our portfolio composed of U.S. treasury bills and the S&amp;P500, since treasury bills are risk-free, the question that arises is what weight should be assigned to the S&amp;P500 within the portfolio given the risk exposure constraint we impose on ourselves. By March 2022, the model recommends a portfolio with approximately 20% exposure to the S&amp;P500 and 80% in risk-free assets with a target volatility of 5%.</p>
+<p><strong>Brief application of a VaR - Value at Risk</strong>.</p>
+<p>The value-at-risk charts show substantial temporal variation in downside risk. This time variation is primarily due to the time variation in volatility.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 5% Value at Risk</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>garchVaR <span class="ot">&lt;-</span> <span class="fu">quantile</span>(rollgarchfit, <span class="at">probs =</span> <span class="fl">0.05</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Volatility for Value at Risk</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>garchvolroll_var <span class="ot">&lt;-</span> <span class="fu">xts</span>(preds<span class="sc">$</span>Sigma, <span class="at">order.by =</span> <span class="fu">time</span>(garchVaR))</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Visual analysis of movements</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>garchplot <span class="ot">&lt;-</span> <span class="fu">plot</span>(garchvolroll_var, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.1</span>, <span class="fl">0.1</span>), </span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Daily volatility and 5% VaR"</span>)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>garchplot <span class="ot">&lt;-</span> <span class="fu">addSeries</span>(garchVaR, <span class="at">on =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">"blue"</span>)</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(garchplot, </span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Daily volatility and 5% VaR"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="2022-08-30_volatility_financial_asset_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The high co-movement between the two series is notorious. The intuition is that, if volatility soars, there is a risk of losing more money. That is why the value at risk also becomes more extreme. In March 2022, the value at risk of this portfolio is 1.95%, or almost $20 for every $1,000 invested in the risky asset.</p>
+<p>Using the weights assigned in the previous exercise, if one were to invest $100,000 today: $20,000 would be invested in the S&amp;P500 and $80,000 in U.S. Treasury bills. In aggregate, the portfolio would have a Value at Risk of $390.5. An amount exposed to risk of only 0.391% of invested capital.</p>
+
+
+<!-- -->
+
+</section>
+</section>
+
+
+<div id="quarto-appendix" class="default"><section class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1" role="doc-endnote"><p>To analyze these measures of profitability and risk, Markowitz proposed to take as <em>proxies</em> for them the expected return and variance, respectively.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div quarto-reuse="quarto-reuse" class="quarto-appendix-contents"><a rel="license" href="https://creativecommons.org/licenses/by/4.0/">https://creativecommons.org/licenses/by/4.0/</a></div></section><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{díaztavera2022,
+  author = {César Díaz Tavera},
+  title = {Analyzing the Volatility of the {Standard} and {Poor’s} 500},
+  date = {2022-08-30},
+  url = {https://cesardt97.github.io/Blog/posts/my-first-blog},
+  langid = {en}
+}
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-díaztavera2022" class="csl-entry quarto-appendix-citeas" role="doc-biblioentry">
+César Díaz Tavera. 2022. <span>“Analyzing the Volatility of the Standard
+and Poor’s 500.”</span> August 30, 2022. <a href="https://cesardt97.github.io/Blog/posts/my-first-blog">https://cesardt97.github.io/Blog/posts/my-first-blog</a>.
+</div></div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb21" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Analyzing the volatility of the Standard and Poor's 500"</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> |</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co">  GARCH models proposed by Bollerslev (1986) are used to analyze the historical variance of the S&amp;P500 stock index in order to find the periods of low and high sustained volatility in its returns. Likewise, a theoretical exercise on volatility predictions and asset allocation in a portfolio by means of volatility targets is developed, in the light of Tobin's two-fund separation theorem.</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "César Díaz Tavera"</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> 2022-08-30</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span><span class="co"> [Financial Econometric, GARCH, Volatility]</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> "financial-econometrics.png"</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="an">citation:</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="co">  url: https://cesardt97.github.io/Blog/posts/my-first-blog</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="an">params:</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="co">  slug: volatily-financial-asset</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="co">  date: 2022-08-30</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a><span class="fu">## **Introduction**</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>Modern portfolio theory was introduced by Nobel Prize-winning economist Henry Markowitz in 1952 with his essay 'Portfolio Selection' published in the *Journal of Finance*. Fundamentally, this theory assumes that the trade-off between return and risk[^1] of financial assets should not be considered on an individual basis (which was the consensus advice at the time), but that the trade-off should be considered from the portfolio as a whole. In other words, investors should focus on selecting portfolios, rather than building their portfolios from the individual selection of attractive assets. Out of the entire universe of possible portfolios, some will optimally balance risk and reward. These optimal portfolios form what Markowitz called the *efficient frontier*. Thus, Markowitz (1952) proposed a mathematical model for **diversification**.</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a><span class="ot">[^1]: </span>To analyze these measures of profitability and risk, Markowitz proposed to take as *proxies* for them the expected return and variance, respectively.</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>However, Henry Markowitz only considered risky assets in his theory. James Tobin (1958) extended Markowitz's work by adding a risk-free asset to the analysis, which led to the emergence of the concepts of the 'super-efficient portfolio' and the 'capital market line'. Because they are leveraged, portfolios on the capital market line can outperform portfolios on the efficient frontier (Glyn Horton, 2013). Therefore, under Tobin's perspective, investors should diversify their portfolio by investing a $w$ proportion of their wealth in a risky asset and a $1-w$ proportion in risk-free assets.</span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>In this paper we make use of the General Conditional Heteroskedasticity models proposed by Bollerslev (1986), to analyze in depth the historical variance of the *Standard and Poor's 500* stock index in order to find the periods of sustained low and high volatility in its returns. Thus, with the knowledge about the behavior of these volatility clusters, a theoretical exercise is proposed on the volatility predictions of the model to the asset allocation in a portfolio by means of volatility targeting, in the light of Tobin's two-fund separation theorem.</span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a><span class="fu">## Results</span></span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a><span class="fu">### Preliminary: libraries used, data wrangling and analysis of returns</span></span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a><span class="in">```{r librerias, echo=TRUE, results='hide', message=FALSE, warning=FALSE}</span></span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Wrangling data</span></span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Financial analysis, time series and Volatility</span></span>
+<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quantmod)</span>
+<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xts)</span>
+<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PerformanceAnalytics)</span>
+<span id="cb21-41"><a href="#cb21-41" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rugarch)</span>
+<span id="cb21-42"><a href="#cb21-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a><span class="co"># For tables</span></span>
+<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb21-46"><a href="#cb21-46" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-47"><a href="#cb21-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-48"><a href="#cb21-48" aria-hidden="true" tabindex="-1"></a>Visually, one can observe how the volatility of returns changes over time. You see that periods of large returns (positive or negative) tend to be followed by large returns, while low returns are followed by low returns. So you can see these periods of sustained high or low volatility, known as volatility clusters.</span>
+<span id="cb21-49"><a href="#cb21-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-50"><a href="#cb21-50" aria-hidden="true" tabindex="-1"></a><span class="in">```{r datos, warning=FALSE, echo=TRUE}</span></span>
+<span id="cb21-51"><a href="#cb21-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Upload the data</span></span>
+<span id="cb21-52"><a href="#cb21-52" aria-hidden="true" tabindex="-1"></a>sp500prices <span class="ot">&lt;-</span> <span class="fu">getSymbols</span>(<span class="st">"^GSPC"</span>,<span class="at">auto.assign =</span> <span class="cn">FALSE</span>, <span class="at">from =</span> <span class="st">"1989-01-03"</span>, <span class="at">to =</span> <span class="fu">as.Date</span>(<span class="st">"2022-03-18"</span>))<span class="sc">$</span><span class="st">'GSPC.Close'</span></span>
+<span id="cb21-53"><a href="#cb21-53" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(sp500prices) <span class="ot">&lt;-</span> <span class="st">'SP500'</span></span>
+<span id="cb21-54"><a href="#cb21-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-55"><a href="#cb21-55" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate daily returns</span></span>
+<span id="cb21-56"><a href="#cb21-56" aria-hidden="true" tabindex="-1"></a>sp500ret <span class="ot">&lt;-</span> <span class="fu">CalculateReturns</span>(sp500prices)</span>
+<span id="cb21-57"><a href="#cb21-57" aria-hidden="true" tabindex="-1"></a>sp500ret <span class="ot">&lt;-</span> sp500ret[<span class="sc">-</span><span class="dv">1</span>,]</span>
+<span id="cb21-58"><a href="#cb21-58" aria-hidden="true" tabindex="-1"></a>line_zero <span class="ot">&lt;-</span> sp500ret</span>
+<span id="cb21-59"><a href="#cb21-59" aria-hidden="true" tabindex="-1"></a>line_zero<span class="sc">$</span>zero <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb21-60"><a href="#cb21-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-61"><a href="#cb21-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-62"><a href="#cb21-62" aria-hidden="true" tabindex="-1"></a><span class="co"># Graph the price and return series of the S&amp;P500</span></span>
+<span id="cb21-63"><a href="#cb21-63" aria-hidden="true" tabindex="-1"></a>graf_returns <span class="ot">&lt;-</span> <span class="fu">plot</span>(sp500ret, <span class="at">main =</span> <span class="st">"Daily returns: S&amp;P500"</span>)</span>
+<span id="cb21-64"><a href="#cb21-64" aria-hidden="true" tabindex="-1"></a>graf_returns <span class="ot">&lt;-</span> <span class="fu">addSeries</span>(line_zero[, <span class="st">"zero"</span>], <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">on =</span> <span class="dv">1</span>)</span>
+<span id="cb21-65"><a href="#cb21-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-66"><a href="#cb21-66" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))</span>
+<span id="cb21-67"><a href="#cb21-67" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sp500prices, <span class="at">main =</span> <span class="st">"Daily prices: S&amp;P500"</span>)</span>
+<span id="cb21-68"><a href="#cb21-68" aria-hidden="true" tabindex="-1"></a>graf_returns</span>
+<span id="cb21-69"><a href="#cb21-69" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-70"><a href="#cb21-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-71"><a href="#cb21-71" aria-hidden="true" tabindex="-1"></a><span class="in">```{r Annualized volatilities, echo=TRUE}</span></span>
+<span id="cb21-72"><a href="#cb21-72" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating annualized volatilities in years close to economic crises</span></span>
+<span id="cb21-73"><a href="#cb21-73" aria-hidden="true" tabindex="-1"></a>sd_annualized <span class="ot">&lt;-</span> </span>
+<span id="cb21-74"><a href="#cb21-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>(<span class="fu">cbind</span>(<span class="st">"2008"</span> <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="dv">252</span>)<span class="sc">*</span><span class="fu">sd</span>(sp500ret[<span class="st">"2008"</span>]), </span>
+<span id="cb21-75"><a href="#cb21-75" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2009"</span> <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="dv">252</span>)<span class="sc">*</span><span class="fu">sd</span>(sp500ret[<span class="st">"2009"</span>]), </span>
+<span id="cb21-76"><a href="#cb21-76" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2017"</span> <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="dv">252</span>)<span class="sc">*</span><span class="fu">sd</span>(sp500ret[<span class="st">"2017"</span>]), </span>
+<span id="cb21-77"><a href="#cb21-77" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2018"</span> <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="dv">252</span>)<span class="sc">*</span><span class="fu">sd</span>(sp500ret[<span class="st">"2018"</span>]), </span>
+<span id="cb21-78"><a href="#cb21-78" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2019"</span> <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="dv">252</span>)<span class="sc">*</span><span class="fu">sd</span>(sp500ret[<span class="st">"2019"</span>]), </span>
+<span id="cb21-79"><a href="#cb21-79" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2020"</span> <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="dv">252</span>)<span class="sc">*</span><span class="fu">sd</span>(sp500ret[<span class="st">"2020"</span>]), </span>
+<span id="cb21-80"><a href="#cb21-80" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2021"</span> <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="dv">252</span>)<span class="sc">*</span><span class="fu">sd</span>(sp500ret[<span class="st">"2021"</span>]),</span>
+<span id="cb21-81"><a href="#cb21-81" aria-hidden="true" tabindex="-1"></a>        <span class="st">"total"</span><span class="ot">=</span> <span class="fu">sqrt</span>(<span class="dv">252</span>)<span class="sc">*</span><span class="fu">sd</span>(sp500ret, <span class="at">na.rm =</span> T)))</span>
+<span id="cb21-82"><a href="#cb21-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-83"><a href="#cb21-83" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(sd_annualized, <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">"Calculating annualized volatilities in years close to economic crises"</span>, <span class="at">booktabs =</span> T) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-84"><a href="#cb21-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> T)</span>
+<span id="cb21-85"><a href="#cb21-85" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-86"><a href="#cb21-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-87"><a href="#cb21-87" aria-hidden="true" tabindex="-1"></a>Volatility fluctuations over different time periods can be observed by means of the 1-month and 3-month rolling volatility:</span>
+<span id="cb21-88"><a href="#cb21-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-89"><a href="#cb21-89" aria-hidden="true" tabindex="-1"></a><span class="in">```{r Rolling volatility, echo=TRUE}</span></span>
+<span id="cb21-90"><a href="#cb21-90" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))</span>
+<span id="cb21-91"><a href="#cb21-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-92"><a href="#cb21-92" aria-hidden="true" tabindex="-1"></a><span class="co"># 1-month rolling annualized volatility estimate</span></span>
+<span id="cb21-93"><a href="#cb21-93" aria-hidden="true" tabindex="-1"></a><span class="fu">chart.RollingPerformance</span>(<span class="at">R =</span> sp500ret[<span class="st">"2000::2022"</span>], <span class="at">width =</span> <span class="dv">22</span>,</span>
+<span id="cb21-94"><a href="#cb21-94" aria-hidden="true" tabindex="-1"></a>                         <span class="at">FUN =</span> <span class="st">"sd.annualized"</span>, <span class="at">scale =</span> <span class="dv">252</span>, <span class="at">main =</span> <span class="st">"1-month rolling volatility"</span>)</span>
+<span id="cb21-95"><a href="#cb21-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-96"><a href="#cb21-96" aria-hidden="true" tabindex="-1"></a><span class="co"># 3-months rolling annualized volatility estimate</span></span>
+<span id="cb21-97"><a href="#cb21-97" aria-hidden="true" tabindex="-1"></a><span class="fu">chart.RollingPerformance</span>(<span class="at">R =</span> sp500ret[<span class="st">"2000::2022"</span>], <span class="at">width =</span> <span class="dv">3</span><span class="sc">*</span><span class="dv">22</span>,</span>
+<span id="cb21-98"><a href="#cb21-98" aria-hidden="true" tabindex="-1"></a>                         <span class="at">FUN =</span> <span class="st">"sd.annualized"</span>, <span class="at">scale =</span> <span class="dv">252</span>, <span class="at">main =</span> <span class="st">"3-month rolling volatility"</span>)</span>
+<span id="cb21-99"><a href="#cb21-99" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-100"><a href="#cb21-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-101"><a href="#cb21-101" aria-hidden="true" tabindex="-1"></a>As can be seen, the volatility of S&amp;P500 returns varies over time and may depend on past variance, so to study its dynamics a process is needed that allows the conditional variance to change over time as a function of past errors, in the manner of the autoregressive conditional heteroscedasticity (ARCH) model proposed by Engle (1982), and the subsequent generalization (GARCH) that allows for a longer memory in the model and a more flexible lag structure (Bollerslev, 1986).</span>
+<span id="cb21-102"><a href="#cb21-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-103"><a href="#cb21-103" aria-hidden="true" tabindex="-1"></a>When developing conditional heteroscedasticity models, the specifications for the equations for the conditional mean, conditional variance and conditional error distribution should be kept in mind.</span>
+<span id="cb21-104"><a href="#cb21-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-105"><a href="#cb21-105" aria-hidden="true" tabindex="-1"></a><span class="fu">### Specification of the conditional variance and conditional error distribution</span></span>
+<span id="cb21-106"><a href="#cb21-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-107"><a href="#cb21-107" aria-hidden="true" tabindex="-1"></a><span class="in">```{r a simple model, echo=TRUE, fig.height = 3}</span></span>
+<span id="cb21-108"><a href="#cb21-108" aria-hidden="true" tabindex="-1"></a><span class="co"># Specification of the Standard GARCH model</span></span>
+<span id="cb21-109"><a href="#cb21-109" aria-hidden="true" tabindex="-1"></a>garchspec <span class="ot">&lt;-</span> <span class="fu">ugarchspec</span>(<span class="at">mean.model =</span> <span class="fu">list</span>(<span class="at">armaOrder =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)),</span>
+<span id="cb21-110"><a href="#cb21-110" aria-hidden="true" tabindex="-1"></a>                        <span class="at">variance.model =</span> <span class="fu">list</span>(<span class="at">model =</span> <span class="st">"sGARCH"</span>), </span>
+<span id="cb21-111"><a href="#cb21-111" aria-hidden="true" tabindex="-1"></a>                        <span class="at">distribution.model =</span> <span class="st">"norm"</span>)</span>
+<span id="cb21-112"><a href="#cb21-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-113"><a href="#cb21-113" aria-hidden="true" tabindex="-1"></a>garchfit <span class="ot">&lt;-</span> <span class="fu">ugarchfit</span>(<span class="at">data =</span> sp500ret, <span class="at">spec =</span> garchspec)</span>
+<span id="cb21-114"><a href="#cb21-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-115"><a href="#cb21-115" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain the estimated volatility </span></span>
+<span id="cb21-116"><a href="#cb21-116" aria-hidden="true" tabindex="-1"></a>garchvol <span class="ot">&lt;-</span> <span class="fu">sigma</span>(garchfit)</span>
+<span id="cb21-117"><a href="#cb21-117" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(garchvol, <span class="at">main =</span> <span class="st">"Estimated Volatility"</span>)</span>
+<span id="cb21-118"><a href="#cb21-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-119"><a href="#cb21-119" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the unconditional volatility and standardized returns.</span></span>
+<span id="cb21-120"><a href="#cb21-120" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">sqrt</span>(<span class="fu">uncvariance</span>(garchfit)), <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">booktabs =</span> T,</span>
+<span id="cb21-121"><a href="#cb21-121" aria-hidden="true" tabindex="-1"></a>      <span class="at">col.names =</span><span class="st">"Unconditional inflation volatility"</span>)</span>
+<span id="cb21-122"><a href="#cb21-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-123"><a href="#cb21-123" aria-hidden="true" tabindex="-1"></a>stdret <span class="ot">&lt;-</span> <span class="fu">residuals</span>(garchfit, <span class="at">standardize =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb21-124"><a href="#cb21-124" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-125"><a href="#cb21-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-126"><a href="#cb21-126" aria-hidden="true" tabindex="-1"></a><span class="in">```{r error distribution comparison, echo=TRUE, fig.height = 4}</span></span>
+<span id="cb21-127"><a href="#cb21-127" aria-hidden="true" tabindex="-1"></a><span class="co"># Visual comparison of error distribution</span></span>
+<span id="cb21-128"><a href="#cb21-128" aria-hidden="true" tabindex="-1"></a><span class="fu">chart.Histogram</span>(stdret, <span class="at">methods =</span> <span class="fu">c</span>(<span class="st">"add.normal"</span>,<span class="st">"add.density"</span>), </span>
+<span id="cb21-129"><a href="#cb21-129" aria-hidden="true" tabindex="-1"></a>                <span class="at">colorset =</span> <span class="fu">c</span>(<span class="st">"gray"</span>,<span class="st">"red"</span>,<span class="st">"blue"</span>), </span>
+<span id="cb21-130"><a href="#cb21-130" aria-hidden="true" tabindex="-1"></a>                <span class="at">main =</span> <span class="st">"Distribution of standardized returns vs. normal dist."</span>)</span>
+<span id="cb21-131"><a href="#cb21-131" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-132"><a href="#cb21-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-133"><a href="#cb21-133" aria-hidden="true" tabindex="-1"></a>Due to the presence of extreme events, the empirical distribution of the returns have thick tails, so the normality assumption may be inadequate and may have generated biased estimators. Considering that the distribution of the standardized returns does not follow a normal distribution, as they have excess kurtosis, thicker tails and an asymmetric effect, setting a t-Student distribution with skewness instead of a normal distribution for the specification of the conditional error distribution leads to a more realistic GARCH model.</span>
+<span id="cb21-134"><a href="#cb21-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-135"><a href="#cb21-135" aria-hidden="true" tabindex="-1"></a>On the other hand, when there is a leverage effect, negative news about returns (negative shocks) affect the variance more than positive news (positive shocks). Because of the asymmetric effect of the distribution, a gjr-GARCH model is applied to confirm a possible leverage effect. In this model, an asymmetric variance response to positive and negative news is allowed for by assigning more weight on negative news by taking $(\alpha + \gamma)*\varepsilon_t^2$ when $\varepsilon_t \le 0$ instead of only $\alpha*\varepsilon_t^2$ when $\varepsilon_t &gt; 0$. The news impact curve is a useful tool for visualizing the response of variance to surprise in returns.</span>
+<span id="cb21-136"><a href="#cb21-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-137"><a href="#cb21-137" aria-hidden="true" tabindex="-1"></a><span class="in">```{r GJR-Garch, echo=TRUE, fig.height = 3}</span></span>
+<span id="cb21-138"><a href="#cb21-138" aria-hidden="true" tabindex="-1"></a><span class="co"># GJR-GARCH Specification</span></span>
+<span id="cb21-139"><a href="#cb21-139" aria-hidden="true" tabindex="-1"></a>gjrgarchspec <span class="ot">&lt;-</span> <span class="fu">ugarchspec</span>(<span class="at">mean.model =</span> <span class="fu">list</span>(<span class="at">armaOrder =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)),</span>
+<span id="cb21-140"><a href="#cb21-140" aria-hidden="true" tabindex="-1"></a>                           <span class="at">variance.model =</span> <span class="fu">list</span>(<span class="at">model =</span> <span class="st">"gjrGARCH"</span>),</span>
+<span id="cb21-141"><a href="#cb21-141" aria-hidden="true" tabindex="-1"></a>                           <span class="at">distribution.model =</span> <span class="st">"sstd"</span>)</span>
+<span id="cb21-142"><a href="#cb21-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-143"><a href="#cb21-143" aria-hidden="true" tabindex="-1"></a>gjrgarchfit <span class="ot">&lt;-</span> <span class="fu">ugarchfit</span>(<span class="at">data =</span> sp500ret, <span class="at">spec =</span> gjrgarchspec)</span>
+<span id="cb21-144"><a href="#cb21-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-145"><a href="#cb21-145" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain the estimated volatility </span></span>
+<span id="cb21-146"><a href="#cb21-146" aria-hidden="true" tabindex="-1"></a>gjrgarchvol_mean <span class="ot">&lt;-</span> <span class="fu">fitted</span>(gjrgarchfit)</span>
+<span id="cb21-147"><a href="#cb21-147" aria-hidden="true" tabindex="-1"></a>gjrgarchvol <span class="ot">&lt;-</span> <span class="fu">sigma</span>(gjrgarchfit)</span>
+<span id="cb21-148"><a href="#cb21-148" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb21-149"><a href="#cb21-149" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare estimated volatilities</span></span>
+<span id="cb21-150"><a href="#cb21-150" aria-hidden="true" tabindex="-1"></a>plotvol <span class="ot">&lt;-</span> <span class="fu">plot</span>(<span class="fu">abs</span>(sp500ret), <span class="at">col =</span> <span class="st">"grey"</span>, </span>
+<span id="cb21-151"><a href="#cb21-151" aria-hidden="true" tabindex="-1"></a>                <span class="at">main =</span> <span class="st">"Estimated returns and volatilities"</span>)</span>
+<span id="cb21-152"><a href="#cb21-152" aria-hidden="true" tabindex="-1"></a>plotvol <span class="ot">&lt;-</span> <span class="fu">addSeries</span>(gjrgarchvol, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">on=</span><span class="dv">1</span>)</span>
+<span id="cb21-153"><a href="#cb21-153" aria-hidden="true" tabindex="-1"></a>plotvol <span class="ot">&lt;-</span> <span class="fu">addSeries</span>(garchvol, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">on=</span><span class="dv">1</span>)</span>
+<span id="cb21-154"><a href="#cb21-154" aria-hidden="true" tabindex="-1"></a>plotvol</span>
+<span id="cb21-155"><a href="#cb21-155" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-156"><a href="#cb21-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-157"><a href="#cb21-157" aria-hidden="true" tabindex="-1"></a><span class="in">```{r News Curve, echo=TRUE, fig.height = 4}</span></span>
+<span id="cb21-158"><a href="#cb21-158" aria-hidden="true" tabindex="-1"></a><span class="co"># News Curve</span></span>
+<span id="cb21-159"><a href="#cb21-159" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gjrgarchfit, <span class="at">which =</span> <span class="dv">12</span>)</span>
+<span id="cb21-160"><a href="#cb21-160" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-161"><a href="#cb21-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-162"><a href="#cb21-162" aria-hidden="true" tabindex="-1"></a>An asymmetric leverage effect can be seen in the figure above. From it we conclude that the conditional variance reaction is greater to past negative shocks than to past positive shocks of the same magnitude in S&amp;P500 returns. So much so, that the market is relatively insensitive to positive shocks compared to the increase and sensitivity of volatility that accompanies negative shocks with a further decline in prices.</span>
+<span id="cb21-163"><a href="#cb21-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-164"><a href="#cb21-164" aria-hidden="true" tabindex="-1"></a>**Model selection based on information criteria**</span>
+<span id="cb21-165"><a href="#cb21-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-166"><a href="#cb21-166" aria-hidden="true" tabindex="-1"></a><span class="in">```{r Information criteria, echo=TRUE}</span></span>
+<span id="cb21-167"><a href="#cb21-167" aria-hidden="true" tabindex="-1"></a><span class="co"># log-likelihood of both models</span></span>
+<span id="cb21-168"><a href="#cb21-168" aria-hidden="true" tabindex="-1"></a>likelihood <span class="ot">&lt;-</span> </span>
+<span id="cb21-169"><a href="#cb21-169" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">Garch =</span> <span class="fu">likelihood</span>(garchfit), <span class="at">gjrGarch =</span> <span class="fu">likelihood</span>(gjrgarchfit))</span>
+<span id="cb21-170"><a href="#cb21-170" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(likelihood) <span class="ot">&lt;-</span> <span class="st">"Log-Likelihood"</span></span>
+<span id="cb21-171"><a href="#cb21-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-172"><a href="#cb21-172" aria-hidden="true" tabindex="-1"></a><span class="co"># Information criteria</span></span>
+<span id="cb21-173"><a href="#cb21-173" aria-hidden="true" tabindex="-1"></a>information_criteria <span class="ot">&lt;-</span> </span>
+<span id="cb21-174"><a href="#cb21-174" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">Garch =</span> <span class="fu">infocriteria</span>(garchfit), <span class="at">gjrGarch =</span> <span class="fu">infocriteria</span>(gjrgarchfit))</span>
+<span id="cb21-175"><a href="#cb21-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-176"><a href="#cb21-176" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(information_criteria) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Garch"</span>, <span class="st">"gjrGarch"</span>)</span>
+<span id="cb21-177"><a href="#cb21-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-178"><a href="#cb21-178" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">rbind</span>(information_criteria, likelihood), <span class="at">booktabs =</span> T,</span>
+<span id="cb21-179"><a href="#cb21-179" aria-hidden="true" tabindex="-1"></a>      <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Garch"</span>, <span class="st">"gjrGarch"</span>),</span>
+<span id="cb21-180"><a href="#cb21-180" aria-hidden="true" tabindex="-1"></a>      <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">format =</span> <span class="st">"latex"</span>,</span>
+<span id="cb21-181"><a href="#cb21-181" aria-hidden="true" tabindex="-1"></a>      <span class="at">caption =</span> <span class="st">"Information Criteria for Conditional Heteroscedasticity Models"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-182"><a href="#cb21-182" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> T, <span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">"hold_position"</span>))</span>
+<span id="cb21-183"><a href="#cb21-183" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-184"><a href="#cb21-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-185"><a href="#cb21-185" aria-hidden="true" tabindex="-1"></a>Based on the information criteria, it is concluded that the GJR-GARCH model with t-Student distribution is a more adequate and realistic model than a simple model with normal distribution.</span>
+<span id="cb21-186"><a href="#cb21-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-187"><a href="#cb21-187" aria-hidden="true" tabindex="-1"></a><span class="fu">### The mean model</span></span>
+<span id="cb21-188"><a href="#cb21-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-189"><a href="#cb21-189" aria-hidden="true" tabindex="-1"></a>Modeling the dynamics of the conditional mean generally has a large effect on estimated returns, but only a small effect on volatility predictions. Financial econometrics theory suggests that the effect can be so minimal, that if the interest is only in the volatility dynamics, one can generally ignore the mean dynamics and assume a simple constant mean specification to save parsimony. To confirm that this is the case, we will consider an AR(1) model and a GARCH model in mean to see how the volatilities are related.</span>
+<span id="cb21-190"><a href="#cb21-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-191"><a href="#cb21-191" aria-hidden="true" tabindex="-1"></a>In the AR(1) model, the sign of the autoregressive parameter depends on the market reaction to the news $\mu_t = \mu + \rho(R_{t-1} - \mu)$. A positive value of $\rho$ is consistent with the interpretation that markets underreact to news, leading to momentum in returns (above-average returns are followed by above-average returns). A negative value of $|rho$ is consistent with the interpretation that markets overreact to news, leading to a reversal in returns (above-average returns are followed by below-average returns). In any case, if $||rho|&lt;1$, then deviations of returns from their long-term mean ($\mu$) are transitory.</span>
+<span id="cb21-192"><a href="#cb21-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-193"><a href="#cb21-193" aria-hidden="true" tabindex="-1"></a>So the question arises: are the daily returns of the S&amp;P500 characterized by momentum or a reversal effect in its AR(1) dynamics?</span>
+<span id="cb21-194"><a href="#cb21-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-195"><a href="#cb21-195" aria-hidden="true" tabindex="-1"></a><span class="in">```{r AR1, echo=TRUE}</span></span>
+<span id="cb21-196"><a href="#cb21-196" aria-hidden="true" tabindex="-1"></a><span class="co"># AR(1) specification of an asymmetric GARCH</span></span>
+<span id="cb21-197"><a href="#cb21-197" aria-hidden="true" tabindex="-1"></a>argarchspec <span class="ot">&lt;-</span> <span class="fu">ugarchspec</span>(<span class="at">mean.model =</span> <span class="fu">list</span>(<span class="at">armaOrder =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>)),</span>
+<span id="cb21-198"><a href="#cb21-198" aria-hidden="true" tabindex="-1"></a>                        <span class="at">variance.model =</span> <span class="fu">list</span>(<span class="at">model =</span> <span class="st">"gjrGARCH"</span>),</span>
+<span id="cb21-199"><a href="#cb21-199" aria-hidden="true" tabindex="-1"></a>                        <span class="at">distribution.model =</span> <span class="st">"sstd"</span>)</span>
+<span id="cb21-200"><a href="#cb21-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-201"><a href="#cb21-201" aria-hidden="true" tabindex="-1"></a>argarchfit <span class="ot">&lt;-</span> <span class="fu">ugarchfit</span>(<span class="at">data =</span>  sp500ret, <span class="at">spec =</span> garchspec)</span>
+<span id="cb21-202"><a href="#cb21-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-203"><a href="#cb21-203" aria-hidden="true" tabindex="-1"></a><span class="co"># Coefficients of the mean model</span></span>
+<span id="cb21-204"><a href="#cb21-204" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">coef</span>(argarchfit)[<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)], <span class="at">digits =</span> <span class="dv">6</span>, <span class="at">booktabs =</span> T, <span class="at">format.args =</span> <span class="fu">list</span>(<span class="at">scientific =</span> <span class="cn">FALSE</span>), <span class="at">col.names =</span><span class="st">"Coeficientes del modelo GARCH con una especificación AR(1) en la media condicional"</span>)</span>
+<span id="cb21-205"><a href="#cb21-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-206"><a href="#cb21-206" aria-hidden="true" tabindex="-1"></a><span class="co"># Mean and volatility of the AR(1) model</span></span>
+<span id="cb21-207"><a href="#cb21-207" aria-hidden="true" tabindex="-1"></a>ar1_mean <span class="ot">&lt;-</span> <span class="fu">fitted</span>(argarchfit)</span>
+<span id="cb21-208"><a href="#cb21-208" aria-hidden="true" tabindex="-1"></a>ar1_vol <span class="ot">&lt;-</span> <span class="fu">sigma</span>(argarchfit)</span>
+<span id="cb21-209"><a href="#cb21-209" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-210"><a href="#cb21-210" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-211"><a href="#cb21-211" aria-hidden="true" tabindex="-1"></a>Since the AR(1) coefficient in the mean model is negative, we find a reversal effect in terms of predicted return. After an above-average return, we expect a below-average return. And after below-average return, we expect above-average return. Also, since this coefficient is close to zero, deviations from daily returns are transitory.</span>
+<span id="cb21-212"><a href="#cb21-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-213"><a href="#cb21-213" aria-hidden="true" tabindex="-1"></a>In contrast to the use of an ARMA model for the mean, we have that a GARCH model in mean does not make use of the autocorrelation of returns. Instead, it exploits the relationship between the expected return and the variance of the return. The higher the risk in terms of variance, the higher the expected return of the investment should be. So it is a model that quantifies the trade-off between risk and reward.</span>
+<span id="cb21-214"><a href="#cb21-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-215"><a href="#cb21-215" aria-hidden="true" tabindex="-1"></a><span class="in">```{r garch in mean, echo=TRUE}</span></span>
+<span id="cb21-216"><a href="#cb21-216" aria-hidden="true" tabindex="-1"></a><span class="co"># Specification of a GARCH in mean</span></span>
+<span id="cb21-217"><a href="#cb21-217" aria-hidden="true" tabindex="-1"></a>gim_garchspec <span class="ot">&lt;-</span> <span class="fu">ugarchspec</span>( </span>
+<span id="cb21-218"><a href="#cb21-218" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean.model =</span> <span class="fu">list</span>(<span class="at">armaOrder =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">archm =</span> <span class="cn">TRUE</span>, <span class="at">archpow =</span> <span class="dv">2</span>),</span>
+<span id="cb21-219"><a href="#cb21-219" aria-hidden="true" tabindex="-1"></a>  <span class="at">variance.model =</span> <span class="fu">list</span>(<span class="at">model =</span> <span class="st">"gjrGARCH"</span>), </span>
+<span id="cb21-220"><a href="#cb21-220" aria-hidden="true" tabindex="-1"></a>  <span class="at">distribution.model =</span> <span class="st">"sstd"</span>)</span>
+<span id="cb21-221"><a href="#cb21-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-222"><a href="#cb21-222" aria-hidden="true" tabindex="-1"></a>gim_garchfit <span class="ot">&lt;-</span> <span class="fu">ugarchfit</span>(<span class="at">data =</span> sp500ret , <span class="at">spec =</span> gim_garchspec)</span>
+<span id="cb21-223"><a href="#cb21-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-224"><a href="#cb21-224" aria-hidden="true" tabindex="-1"></a><span class="co"># Mean and volatility of the AR(1) model</span></span>
+<span id="cb21-225"><a href="#cb21-225" aria-hidden="true" tabindex="-1"></a>gim_mean <span class="ot">&lt;-</span> <span class="fu">fitted</span>(gim_garchfit)</span>
+<span id="cb21-226"><a href="#cb21-226" aria-hidden="true" tabindex="-1"></a>gim_vol <span class="ot">&lt;-</span> <span class="fu">sigma</span>(gim_garchfit)</span>
+<span id="cb21-227"><a href="#cb21-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-228"><a href="#cb21-228" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlation between the estimated returns of the AR(1) model and the average model</span></span>
+<span id="cb21-229"><a href="#cb21-229" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">cor</span>(ar1_mean, gim_mean), </span>
+<span id="cb21-230"><a href="#cb21-230" aria-hidden="true" tabindex="-1"></a>      <span class="at">col.names =</span> <span class="st">"Correlación entre los retornos estimados del modelo Garch-AR(1) y el modelo Garch en media"</span>, <span class="at">format =</span> <span class="st">"latex"</span>, <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">booktabs =</span> T) <span class="sc">%&gt;%</span></span>
+<span id="cb21-231"><a href="#cb21-231" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> T)</span>
+<span id="cb21-232"><a href="#cb21-232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-233"><a href="#cb21-233" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlation between the estimated returns of the mean model and the AR(1) model</span></span>
+<span id="cb21-234"><a href="#cb21-234" aria-hidden="true" tabindex="-1"></a>model_correlation <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">cor</span>(<span class="fu">merge</span>(gjrgarchvol, ar1_vol, gim_vol)))</span>
+<span id="cb21-235"><a href="#cb21-235" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(model_correlation) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"gjrGarch"</span>, <span class="st">"AR(1)"</span>, <span class="st">"Garch in mean"</span>)</span>
+<span id="cb21-236"><a href="#cb21-236" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(model_correlation) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"gjrGarch"</span>, <span class="st">"AR(1)"</span>, <span class="st">"Garch in mean"</span>)</span>
+<span id="cb21-237"><a href="#cb21-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-238"><a href="#cb21-238" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(model_correlation, <span class="at">booktabs =</span> T,</span>
+<span id="cb21-239"><a href="#cb21-239" aria-hidden="true" tabindex="-1"></a>      <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">format =</span> <span class="st">"latex"</span>,</span>
+<span id="cb21-240"><a href="#cb21-240" aria-hidden="true" tabindex="-1"></a>      <span class="at">caption =</span> <span class="st">"Correlation between estimated volatilities for different specifications of Garch models"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-241"><a href="#cb21-241" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> T)</span>
+<span id="cb21-242"><a href="#cb21-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-243"><a href="#cb21-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-244"><a href="#cb21-244" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-245"><a href="#cb21-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-246"><a href="#cb21-246" aria-hidden="true" tabindex="-1"></a>There is a large disagreement between the predicted returns obtained with the Garch-AR(1) and GARCH models on average, as evidenced by the low correlation. Because the mean return is close to zero for daily returns, these differences in mean prediction have little impact on volatility predictions. Their correlation is almost one. Since we are only interested in volatility dynamics, and to keep parsimony, we will estimate GARCH models with constant mean.</span>
+<span id="cb21-247"><a href="#cb21-247" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-248"><a href="#cb21-248" aria-hidden="true" tabindex="-1"></a><span class="fu">### Extension of the analysis of the volatility dynamics of SP500 returns.</span></span>
+<span id="cb21-249"><a href="#cb21-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-250"><a href="#cb21-250" aria-hidden="true" tabindex="-1"></a>In the past graphs, we observed how financial return volatility is clustered over time: periods of above-average volatility are followed by periods of below-average volatility. In the long term, it is expected that:</span>
+<span id="cb21-251"><a href="#cb21-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-252"><a href="#cb21-252" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>When volatility is high, volatility will decline and return to its long-term average.</span>
+<span id="cb21-253"><a href="#cb21-253" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>When volatility is low, volatility will increase and return to its long-term average.</span>
+<span id="cb21-254"><a href="#cb21-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-255"><a href="#cb21-255" aria-hidden="true" tabindex="-1"></a>In the estimation of GARCH models we can exploit this mean-reverting behavior of volatility by volatility targeting and confirm that the long-run volatility implied by the GARCH model is equal to the sample standard deviation.</span>
+<span id="cb21-256"><a href="#cb21-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-257"><a href="#cb21-257" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=TRUE}</span></span>
+<span id="cb21-258"><a href="#cb21-258" aria-hidden="true" tabindex="-1"></a><span class="co"># Specification for variance targeting</span></span>
+<span id="cb21-259"><a href="#cb21-259" aria-hidden="true" tabindex="-1"></a>targarchspec <span class="ot">&lt;-</span> <span class="fu">ugarchspec</span>(<span class="at">mean.model =</span> <span class="fu">list</span>(<span class="at">armaOrder =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)),</span>
+<span id="cb21-260"><a href="#cb21-260" aria-hidden="true" tabindex="-1"></a>                        <span class="at">variance.model =</span> <span class="fu">list</span>(<span class="at">model =</span> <span class="st">"gjrGARCH"</span>,</span>
+<span id="cb21-261"><a href="#cb21-261" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">variance.targeting =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb21-262"><a href="#cb21-262" aria-hidden="true" tabindex="-1"></a>                        <span class="at">distribution.model =</span> <span class="st">"sstd"</span>)</span>
+<span id="cb21-263"><a href="#cb21-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-264"><a href="#cb21-264" aria-hidden="true" tabindex="-1"></a>targarchfit <span class="ot">&lt;-</span> <span class="fu">ugarchfit</span>(<span class="at">data =</span> sp500ret, <span class="at">spec =</span> targarchspec)</span>
+<span id="cb21-265"><a href="#cb21-265" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-266"><a href="#cb21-266" aria-hidden="true" tabindex="-1"></a>targarchvol <span class="ot">&lt;-</span> <span class="fu">sigma</span>(targarchfit)</span>
+<span id="cb21-267"><a href="#cb21-267" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-268"><a href="#cb21-268" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare against gjrGarch</span></span>
+<span id="cb21-269"><a href="#cb21-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-270"><a href="#cb21-270" aria-hidden="true" tabindex="-1"></a><span class="co"># log-likelihood of the two models</span></span>
+<span id="cb21-271"><a href="#cb21-271" aria-hidden="true" tabindex="-1"></a>likelihood_2 <span class="ot">&lt;-</span> </span>
+<span id="cb21-272"><a href="#cb21-272" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">gjrGarch =</span> <span class="fu">likelihood</span>(gjrgarchfit), <span class="at">tarGarch =</span> <span class="fu">likelihood</span>(targarchfit))</span>
+<span id="cb21-273"><a href="#cb21-273" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(likelihood_2) <span class="ot">&lt;-</span> <span class="st">"Log-Likelihood"</span></span>
+<span id="cb21-274"><a href="#cb21-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-275"><a href="#cb21-275" aria-hidden="true" tabindex="-1"></a><span class="co"># Information criteria</span></span>
+<span id="cb21-276"><a href="#cb21-276" aria-hidden="true" tabindex="-1"></a>information_criteria_2 <span class="ot">&lt;-</span> </span>
+<span id="cb21-277"><a href="#cb21-277" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">gjrGarch =</span> <span class="fu">infocriteria</span>(gjrgarchfit), <span class="at">tarGarch =</span> <span class="fu">infocriteria</span>(targarchfit))</span>
+<span id="cb21-278"><a href="#cb21-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-279"><a href="#cb21-279" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(information_criteria_2) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"gjrGarch"</span>, <span class="st">"tarGarch"</span>)</span>
+<span id="cb21-280"><a href="#cb21-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-281"><a href="#cb21-281" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">rbind</span>(information_criteria_2, likelihood_2), <span class="at">booktabs =</span> T,</span>
+<span id="cb21-282"><a href="#cb21-282" aria-hidden="true" tabindex="-1"></a>      <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"gjrGarch"</span>, <span class="st">"Volatility targeting gjrGarch"</span>),</span>
+<span id="cb21-283"><a href="#cb21-283" aria-hidden="true" tabindex="-1"></a>      <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">format =</span> <span class="st">"latex"</span>,</span>
+<span id="cb21-284"><a href="#cb21-284" aria-hidden="true" tabindex="-1"></a>      <span class="at">caption =</span> <span class="st">"Information Criteria for GARCH models with volatility targeting"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-285"><a href="#cb21-285" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> T, <span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">"hold_position"</span>))</span>
+<span id="cb21-286"><a href="#cb21-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-287"><a href="#cb21-287" aria-hidden="true" tabindex="-1"></a><span class="co"># Implied long term volatility</span></span>
+<span id="cb21-288"><a href="#cb21-288" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">data.frame</span>(<span class="at">Garch =</span> <span class="fu">sqrt</span>(<span class="fu">uncvariance</span>(garchfit)), </span>
+<span id="cb21-289"><a href="#cb21-289" aria-hidden="true" tabindex="-1"></a>                 <span class="at">tarGarch =</span> <span class="fu">sqrt</span>(<span class="fu">uncvariance</span>(targarchfit))), </span>
+<span id="cb21-290"><a href="#cb21-290" aria-hidden="true" tabindex="-1"></a>      <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Simple GARCH model"</span>, <span class="st">"GJR-Garch model with volatility targeting"</span>), </span>
+<span id="cb21-291"><a href="#cb21-291" aria-hidden="true" tabindex="-1"></a>      <span class="at">format =</span> <span class="st">"latex"</span>, <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">booktabs =</span> T,</span>
+<span id="cb21-292"><a href="#cb21-292" aria-hidden="true" tabindex="-1"></a>      <span class="at">caption =</span> <span class="st">"Implied long-term volatility"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-293"><a href="#cb21-293" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> T, <span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">"hold_position"</span>))</span>
+<span id="cb21-294"><a href="#cb21-294" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-295"><a href="#cb21-295" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-296"><a href="#cb21-296" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-297"><a href="#cb21-297" aria-hidden="true" tabindex="-1"></a>The models that have been studied so far lead to an in-sample volatility estimate obtained by estimating the GARCH model only once and using the full time series, which can cause bias (look-ahead bias). However, in moving window models these biases are avoided by conditioning the estimation to use only the returns available at the previous time of estimation. That is, the model would be re-estimated in each window using only the yields that are actually observable at the time of estimation.</span>
+<span id="cb21-298"><a href="#cb21-298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-299"><a href="#cb21-299" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=TRUE,  fig.height = 3}</span></span>
+<span id="cb21-300"><a href="#cb21-300" aria-hidden="true" tabindex="-1"></a><span class="co"># Specification for garch on movable windows</span></span>
+<span id="cb21-301"><a href="#cb21-301" aria-hidden="true" tabindex="-1"></a>rollgarchspec <span class="ot">&lt;-</span> <span class="fu">ugarchspec</span>(<span class="at">mean.model =</span> <span class="fu">list</span>(<span class="at">armaOrder =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)),</span>
+<span id="cb21-302"><a href="#cb21-302" aria-hidden="true" tabindex="-1"></a>                        <span class="at">variance.model =</span> <span class="fu">list</span>(<span class="at">model =</span> <span class="st">"gjrGARCH"</span>,</span>
+<span id="cb21-303"><a href="#cb21-303" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">variance.targeting =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb21-304"><a href="#cb21-304" aria-hidden="true" tabindex="-1"></a>                        <span class="at">distribution.model =</span> <span class="st">"sstd"</span>)</span>
+<span id="cb21-305"><a href="#cb21-305" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-306"><a href="#cb21-306" aria-hidden="true" tabindex="-1"></a>rollgarchfit <span class="ot">&lt;-</span> <span class="fu">ugarchroll</span>(garchspec, </span>
+<span id="cb21-307"><a href="#cb21-307" aria-hidden="true" tabindex="-1"></a>                           <span class="at">data =</span> sp500ret,</span>
+<span id="cb21-308"><a href="#cb21-308" aria-hidden="true" tabindex="-1"></a>                           <span class="at">n.start =</span> <span class="dv">2000</span>, <span class="at">refit.window =</span> <span class="st">"moving"</span>,  <span class="at">refit.every =</span> <span class="dv">500</span>)</span>
+<span id="cb21-309"><a href="#cb21-309" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-310"><a href="#cb21-310" aria-hidden="true" tabindex="-1"></a><span class="co"># Mobile predictions</span></span>
+<span id="cb21-311"><a href="#cb21-311" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(rollgarchfit)</span>
+<span id="cb21-312"><a href="#cb21-312" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-313"><a href="#cb21-313" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparison of the estimated volatility in the in-sample model and the moving model</span></span>
+<span id="cb21-314"><a href="#cb21-314" aria-hidden="true" tabindex="-1"></a>garchvolroll <span class="ot">&lt;-</span> <span class="fu">xts</span>(preds<span class="sc">$</span>Sigma, <span class="at">order.by =</span> <span class="fu">as.Date</span>(<span class="fu">rownames</span>(preds)))</span>
+<span id="cb21-315"><a href="#cb21-315" aria-hidden="true" tabindex="-1"></a>volplot <span class="ot">&lt;-</span> <span class="fu">plot</span>(gjrgarchvol, <span class="at">col =</span> <span class="st">"darkgrey"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>, </span>
+<span id="cb21-316"><a href="#cb21-316" aria-hidden="true" tabindex="-1"></a>                <span class="at">main =</span> <span class="st">"In-sample and moving window volatility forecasts"</span>)</span>
+<span id="cb21-317"><a href="#cb21-317" aria-hidden="true" tabindex="-1"></a>volplot <span class="ot">&lt;-</span> <span class="fu">addSeries</span>(garchvolroll, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">on =</span> <span class="dv">1</span>)</span>
+<span id="cb21-318"><a href="#cb21-318" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(volplot)</span>
+<span id="cb21-319"><a href="#cb21-319" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-320"><a href="#cb21-320" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-321"><a href="#cb21-321" aria-hidden="true" tabindex="-1"></a>Tactical Asset Allocation using Target Volatility<span class="sc">\*\*</span> <span class="sc">\*\*</span>Targeted Volatility</span>
+<span id="cb21-322"><a href="#cb21-322" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-323"><a href="#cb21-323" aria-hidden="true" tabindex="-1"></a>GARCH volatility predictions have a direct practical use in portfolio allocation. According to James Tobin's two-fund separation theorem, you should invest a proportion w of your wealth in a risky portfolio and the remainder in a risk-free asset, such as a U.S. Treasury bill. If you target a portfolio with an annualized volatility of 5%, and the annualized volatility of the risky asset is w, then you should invest (0.05/w) in the risky asset, in this case, the S&amp;P500.</span>
+<span id="cb21-324"><a href="#cb21-324" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-325"><a href="#cb21-325" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=TRUE}</span></span>
+<span id="cb21-326"><a href="#cb21-326" aria-hidden="true" tabindex="-1"></a><span class="co"># Annualized volatility from gjrGARCH moving window model with </span></span>
+<span id="cb21-327"><a href="#cb21-327" aria-hidden="true" tabindex="-1"></a><span class="co"># asymmetric t-Student distribution</span></span>
+<span id="cb21-328"><a href="#cb21-328" aria-hidden="true" tabindex="-1"></a>estimated_annualized_volatility <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">252</span>)<span class="sc">*</span>garchvolroll</span>
+<span id="cb21-329"><a href="#cb21-329" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-330"><a href="#cb21-330" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the weights assigned to the risky asset with a target volatility of 5% per year. </span></span>
+<span id="cb21-331"><a href="#cb21-331" aria-hidden="true" tabindex="-1"></a>weight <span class="ot">&lt;-</span> <span class="fl">0.05</span> <span class="sc">/</span> estimated_annualized_volatility</span>
+<span id="cb21-332"><a href="#cb21-332" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-333"><a href="#cb21-333" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare the annualized volatility with the portfolio's weights</span></span>
+<span id="cb21-334"><a href="#cb21-334" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">merge</span>(estimated_annualized_volatility, weight), <span class="at">multi.panel =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb21-335"><a href="#cb21-335" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Annualized vol. and the risk asset allocation weights"</span>)</span>
+<span id="cb21-336"><a href="#cb21-336" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-337"><a href="#cb21-337" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-338"><a href="#cb21-338" aria-hidden="true" tabindex="-1"></a>In the above chart it is easy to observe the dynamics of asset allocation within a portfolio. In our portfolio composed of U.S. treasury bills and the S&amp;P500, since treasury bills are risk-free, the question that arises is what weight should be assigned to the S&amp;P500 within the portfolio given the risk exposure constraint we impose on ourselves. By March 2022, the model recommends a portfolio with approximately 20% exposure to the S&amp;P500 and 80% in risk-free assets with a target volatility of 5%.</span>
+<span id="cb21-339"><a href="#cb21-339" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-340"><a href="#cb21-340" aria-hidden="true" tabindex="-1"></a>**Brief application of a VaR - Value at Risk**.</span>
+<span id="cb21-341"><a href="#cb21-341" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-342"><a href="#cb21-342" aria-hidden="true" tabindex="-1"></a>The value-at-risk charts show substantial temporal variation in downside risk. This time variation is primarily due to the time variation in volatility.</span>
+<span id="cb21-343"><a href="#cb21-343" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-344"><a href="#cb21-344" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=TRUE,  fig.height = 3}</span></span>
+<span id="cb21-345"><a href="#cb21-345" aria-hidden="true" tabindex="-1"></a><span class="co"># 5% Value at Risk</span></span>
+<span id="cb21-346"><a href="#cb21-346" aria-hidden="true" tabindex="-1"></a>garchVaR <span class="ot">&lt;-</span> <span class="fu">quantile</span>(rollgarchfit, <span class="at">probs =</span> <span class="fl">0.05</span>)</span>
+<span id="cb21-347"><a href="#cb21-347" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-348"><a href="#cb21-348" aria-hidden="true" tabindex="-1"></a><span class="co"># Volatility for Value at Risk</span></span>
+<span id="cb21-349"><a href="#cb21-349" aria-hidden="true" tabindex="-1"></a>garchvolroll_var <span class="ot">&lt;-</span> <span class="fu">xts</span>(preds<span class="sc">$</span>Sigma, <span class="at">order.by =</span> <span class="fu">time</span>(garchVaR))</span>
+<span id="cb21-350"><a href="#cb21-350" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-351"><a href="#cb21-351" aria-hidden="true" tabindex="-1"></a><span class="co"># Visual analysis of movements</span></span>
+<span id="cb21-352"><a href="#cb21-352" aria-hidden="true" tabindex="-1"></a>garchplot <span class="ot">&lt;-</span> <span class="fu">plot</span>(garchvolroll_var, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.1</span>, <span class="fl">0.1</span>), </span>
+<span id="cb21-353"><a href="#cb21-353" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Daily volatility and 5% VaR"</span>)</span>
+<span id="cb21-354"><a href="#cb21-354" aria-hidden="true" tabindex="-1"></a>garchplot <span class="ot">&lt;-</span> <span class="fu">addSeries</span>(garchVaR, <span class="at">on =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">"blue"</span>)</span>
+<span id="cb21-355"><a href="#cb21-355" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(garchplot, </span>
+<span id="cb21-356"><a href="#cb21-356" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Daily volatility and 5% VaR"</span>)</span>
+<span id="cb21-357"><a href="#cb21-357" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-358"><a href="#cb21-358" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-359"><a href="#cb21-359" aria-hidden="true" tabindex="-1"></a>The high co-movement between the two series is notorious. The intuition is that, if volatility soars, there is a risk of losing more money. That is why the value at risk also becomes more extreme. In March 2022, the value at risk of this portfolio is 1.95%, or almost \$20 for every \$1,000 invested in the risky asset.</span>
+<span id="cb21-360"><a href="#cb21-360" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-361"><a href="#cb21-361" aria-hidden="true" tabindex="-1"></a>Using the weights assigned in the previous exercise, if one were to invest \$100,000 today: \$20,000 would be invested in the S&amp;P500 and \$80,000 in U.S. Treasury bills. In aggregate, the portfolio would have a Value at Risk of \$390.5. An amount exposed to risk of only 0.391% of invested capital.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+</body></html>

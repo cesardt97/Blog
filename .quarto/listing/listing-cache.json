@@ -1,0 +1,10 @@
+{
+  "listingMap": {
+    "home.qmd": [
+      "posts"
+    ],
+    "serie-credit-score.qmd": [
+      "posts/series-sc"
+    ]
+  }
+}
