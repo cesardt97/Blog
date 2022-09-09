@@ -82,6 +82,25 @@ code span.st { color: #4070a0; } /* String */
 code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
 </style>
 
 
@@ -163,7 +182,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <a class="nav-link" href="../../../about.html">About</a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/"><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/cesardt97"><i class="bi bi-github" role="img">
 </i> 
  </a>
   </li>  
@@ -186,11 +205,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#definition-of-terms" id="toc-definition-of-terms" class="nav-link active" data-scroll-target="#definition-of-terms"><strong>Definition of terms</strong></a></li>
-  <li><a href="#implications-whatever" id="toc-implications-whatever" class="nav-link" data-scroll-target="#implications-whatever">Implications whatever</a>
-  <ul class="collapse">
-  <li><a href="#preliminares-librerias-usadas-datos-y-análisis-de-los-retornos" id="toc-preliminares-librerias-usadas-datos-y-análisis-de-los-retornos" class="nav-link" data-scroll-target="#preliminares-librerias-usadas-datos-y-análisis-de-los-retornos">Preliminares: librerias usadas, datos y análisis de los retornos</a></li>
-  </ul></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><strong>Introduction</strong></a></li>
+  <li><a href="#definition-of-key-concepts" id="toc-definition-of-key-concepts" class="nav-link" data-scroll-target="#definition-of-key-concepts"><strong>Definition of key concepts</strong></a></li>
   </ul>
 </nav>
 </nav>
@@ -202,7 +218,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">Introduction to the study serie: key concepts to understand credit scoring</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+<div class="quarto-title-block"><div><h1 class="title">Introduction to the study serie: key concepts to understand credit scoring</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
   <div class="quarto-categories">
     <div class="quarto-category">Credit Score</div>
     <div class="quarto-category">Economics</div>
@@ -213,7 +229,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div>
   <div class="description">
-    The aim is to explain basic economic concepts in order to understand more fluently why a credit score is important.
+    <p>The aim is to explain basic economic concepts in order to understand more fluently why a credit score is important.</p>
   </div>
 </div>
 
@@ -240,73 +256,78 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="definition-of-terms" class="level2">
-<h2 class="anchored" data-anchor-id="definition-of-terms"><strong>Definition of terms</strong></h2>
-<p>Adverse selection is a pre-contractual asymmetric information which often leads to making bad decisions, such as doing more business with less-profitable or riskier business. In the banking set up, it may involve extending credit facilities to a borrower with high likelihood of default<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
-<p>Asymmetric information is known as information failure and occurs when one party to an economic transaction possesses greater and material knowledge over the other party. This often manifested typically<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> where the seller of a good or service possesses greater knowledge than the buyer.</p>
-<p>Moral hazard on the other is post-contractual asymmetric information which occurs whenever a borrower engages in behaviors that are not in the best interest of the lender for example a borrower<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> diverting use a bank loan to buy lottery tickets instead of purchase of merchandise for resale, as agreed upon with the lender. It is also moral hazard if a borrower fails to repay a loan when especially in a case where the facility is unsecured knowing well that the bank stands to lose.</p>
-<p>Free-rider problems refers to a situation where an agent that collects information about a particular risk may be unable to prevent other agents from using that information for example a deposit insurance institution that is unable to price risk accurately.</p>
-<p>Rational herding refers to a situation whereby an agents choosing to disregard their own information and instead react to information on the decisions taken by other agents (information externalities).</p>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction"><strong>Introduction</strong></h2>
+<p>The sustainable and healthy development of a country’s financial system and banking sector is of utmost importance for economic growth. As banks are the main source of credit, they provide economic agents with funds to consume and invest, adding dynamism to the economic activity. However, the banking sector is full of risks. That is why risk management is an area of extreme importance and has remained a topic of major interest since the financial crisis of 2007-2008. Today, risk management is one of the central functions of financial institutions.</p>
+<p>Because of its importance, <a href="https://juansqw.github.io/jquinonez/about.html">Juan Quiñonez</a> and <a href="https://cesardt97.github.io/Blog/about.html">I</a> have decided to carry out a brief series of studies where we consider a type of risk and, specifically, one of the ways in which it can be mitigated. We refer to credit risk and credit scores, respectively. This study series on credit score in banking will cover the following:</p>
+<ul>
+<li><strong>Introduction to the study series: key concepts to understand credit scoring</strong></li>
+<li>The Importance of a Credit Score</li>
+<li>Methodologies for Credit Score development
+<ul>
+<li>Logit model
+<ul>
+<li>Out of sample evaluation</li>
+<li>Kolmogorov–Smirnov test</li>
+</ul></li>
+<li>Machine learning models</li>
+<li>Logit benchmark vs ML models</li>
+</ul></li>
+</ul>
+<p>The goal of the study series is to better understand what a credit score is, why it is important, and how it is constructed. Explicitly, after briefly laying out a theoretical background on its importance, we aim to delved into the statistical techniques that are appropriate to construct a good credit score system. This article is the first in the series of studies and reviews the key economic concepts involved in the underlying problem that score credits try to mitigate.</p>
 </section>
-<section id="implications-whatever" class="level2">
-<h2 class="anchored" data-anchor-id="implications-whatever">Implications whatever</h2>
-<p>Information asymmetry between lenders and borrowers plays a key role in the field of finance and banking as one of the vital causes of financial frictions. Lenders do not know the creditworthiness of borrowers (hidden information) or cannot detect inefficient behavior of borrowers after lending (hidden action). For fear of lending to borrowers with poor credit worthiness or those that take inefficient behavior, lenders are unwilling to provide their own funds, which creates severe financial frictions. This is the problem of adverse selection (in the case of hidden information), or of moral hazard (in the case of hidden action).</p>
-<p>Presence of asymmetric information in the banking industry gives rise to wrong pricing patterns and selections. An asymmetric information-intensive market progressively draws away from being effective and fully competitive.</p>
-<p>In credit markets, asymmetric information avoids accurate transfer of the funds, and makes it difficult to both effectively utilize the savings and efficiently finance the investments. Proper pricing and transfer to the prospective investors of the funds is only possible if the parties have full and accurate information of each other. Otherwise, investments could not be financed at appropriate conditions, and results that would adversely impact the growth of national economy might arise.</p>
-<section id="preliminares-librerias-usadas-datos-y-análisis-de-los-retornos" class="level3">
-<h3 class="anchored" data-anchor-id="preliminares-librerias-usadas-datos-y-análisis-de-los-retornos">Preliminares: librerias usadas, datos y análisis de los retornos</h3>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">|&gt;</span> </span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> mpg, <span class="at">y =</span> wt)) <span class="sc">+</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># scale_fill_manual(values = c("#F4F4F4")) +</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Fuel efficiency (mpg)"</span>, <span class="at">y=</span><span class="st">"Weight (tons)"</span>,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">title=</span><span class="st">"Seminal ggplot2 scatterplot example"</span>,</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle=</span><span class="st">"A plot that is only useful for demonstration purposes"</span>,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption=</span><span class="st">"Source: author's elaboration"</span>) <span class="sc">+</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_blog</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="09-05-2022_intro_study_serie_files/figure-html/librerias-1.png" class="img-fluid" width="800"></p>
-</div>
-</div>
-<section id="appendix" class="level4">
-<h4 class="anchored" data-anchor-id="appendix"><strong>Appendix</strong></h4>
+<section id="definition-of-key-concepts" class="level2">
+<h2 class="anchored" data-anchor-id="definition-of-key-concepts"><strong>Definition of key concepts</strong></h2>
+<p><em>Information asymmetry cause the healthy functioning of markets to disappear.</em></p>
+<p>Information is the basis of decision making. Whenever we want to do a transaction of any kind<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> we try to collect as much information as possible in order to gain bargain power, or simply to be sure that the transaction is beneficial. Information asymmetry refers to a situation of imbalance in which, in a transaction of any kind, one of the interested parties has more or better information than the other, which creates inefficiency and even market failures in some cases. Popular examples of information asymmetry are moral hazard and adverse selection.</p>
+<p>Moral hazard is a post-contractual information asymmetry problem that occurs when one of the parties to a contract takes actions that represent additional risk (and thus are detrimental) to the other party, within the framework of what had been agreed. For example, if a borrower takes out a loan with the idea of starting a retail business with which he would pay the installment, but uses the money to travel, his probability of default increases, hence increasing in the lender’s credit risk.</p>
+<p>On the other hand, adverse selection is a pre-contractual problem that leads to bad decision<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Since <span class="citation" data-cites="akerlof1978market">Akerlof (<a href="#ref-akerlof1978market" role="doc-biblioref">1978</a>)</span> seminal article ‘the market for lemons’<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, where he explains the concept and its implications in market dynamics, adverse selection has come to be seen as a fundamental cause of market failure. Housing, insurance, credit markets and others suffer constantly from this problem. Put simply, adverse selection is the problem of correctly distinguish between a good and a bad <em>product</em><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> when there is information asymmetry in an economic transaction. This problem arises because sometimes it is very costly/difficult to be fully informed about the quality or features of a <em>product</em>. In markets where this problem is consistent, the overall quality of the <em>products</em> at sell in the market significantly declines<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>. In the banking industry, adverse selection is common as an issue concerning the provision of credit, since the intermediary can’t know for sure who has a high probability of default.</p>
+<p>[Something about risk]</p>
+<p>[Something about credit risk and default risk]</p>
+<p>Finally, I would like you to take away the idea of why effective supervision is important for the banking sector. <span class="citation" data-cites="inbook">Gündüz (<a href="#ref-inbook" role="doc-biblioref">2020</a>)</span> : <em>The main purpose of surveillance and supervision is to ensure that banks retain sufficient capital against the risks they bear and to ensure that they operate in an environment where reliable conditions are created. Effective surveillance and supervision in banking plays a critical role in ensuring stability in the financial system of every country. It provides the benefits in free market conditions and in the implementation of effective macroeconomic policies.</em></p>
+<p>In the next article in this series of studies we will delve into how these concepts are interrelated, their implications for the banking industry, and why a good credit scoring system is important for financial institutions.</p>
+<section id="references" class="level4">
+
 
 
 <!-- -->
 
-</section>
+
 </section>
 </section>
 
 
-<div id="quarto-appendix" class="default"><section class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="ref-akerlof1978market" class="csl-entry" role="doc-biblioentry">
+Akerlof, George A. 1978. <span>“The Market for <span>‘Lemons’</span>: Quality Uncertainty and the Market Mechanism.”</span> In <em>Uncertainty in Economics</em>, 235–51. Elsevier.
+</div>
+<div id="ref-inbook" class="csl-entry" role="doc-biblioentry">
+Gündüz, Veclal. 2020. <span>“Risk Management in Banking Sector.”</span> In, 121–35.
+</div>
+<div id="ref-hayes_2022" class="csl-entry" role="doc-biblioentry">
+Hayes, Adam. 2022. <span>“Adverse Selection.”</span> Investopedia. <a href="https://www.investopedia.com/terms/a/adverseselection.asp">https://www.investopedia.com/terms/a/adverseselection.asp</a>.
+</div>
+</div></section><section class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
 <ol>
-<li id="fn1" role="doc-endnote"><p>this is a footnote<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>Here is a foot note<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3" role="doc-endnote"><p>Here’s one with multiple blocks.</p>
-<p>Subsequent paragraphs are indented to show that they belong to the previous footnote.</p>
-<pre><code>{ some.code }</code></pre>
-<p>The whole paragraph can be indented, or just the first line. In this way, multi-paragraph footnotes work like multi-paragraph list items.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1" role="doc-endnote"><p>i.e.&nbsp;a contractual arrangement, buy a car, or investment decisions.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>Such as doing more business with less-profitable or riskier business <span class="citation" data-cites="hayes_2022">(<a href="#ref-hayes_2022" role="doc-biblioref">Hayes 2022</a>)</span>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p>In this paper, Akerlof exemplify adverse selection with an analogy concerning the market of used cars: in the market exists good cars, and bad cards (Akerlof refer to those as lemons). The problem comes because when buying a car, the owner and seller of the car clearly knows the conditions of his property, while the buyer ignore its characteristics. If the buyer where to know that the car his buying is good, he would pay the right price for it. However, Akerlof suggests that this is not possible to know for sure. Therefore, since the buyer must take into account the probability that the car, he buys may be good or bad, he will lower the price he is willing to pay for a used car so that it is close to the average market price (it should be noted that the seller of the lemon would be happy with any price greater than or equal to its market value, which in this case is the lower limit). However, the sellers of the good cars will be unwilling to sell for a lower price, forcing them out of the market. On aggregate, the average quality of vehicles on the market would drop with the exit of the best sellers, again lowering the buyer’s price and again driving the average quality cars out of the market. Thus, creating a major market failure where the only buying options are ‘lemons’.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4" role="doc-endnote"><p>We refer to product as the counterparty in a transaction, or the merchandise they are selling.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5" role="doc-endnote"><p>Hence, the selection from the pool of products becomes adverse<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div quarto-reuse="quarto-reuse" class="quarto-appendix-contents"><a rel="license" href="https://creativecommons.org/licenses/by/4.0/">https://creativecommons.org/licenses/by/4.0/</a></div></section><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{díaztavera2022,
   author = {César Díaz Tavera and Juan Quiñonez Wu},
   title = {Introduction to the Study Serie: Key Concepts to Understand
     Credit Scoring},
   date = {2022-09-05},
-  url = {https://cesardt97.github.io/Blog/posts/my-first-blog},
+  url = {https://cesardt97.github.io/Blog/posts/series-sc/intro-to-the-study-serie/09-05-2022_intro_study_serie.html},
   langid = {en}
 }
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-díaztavera2022" class="csl-entry quarto-appendix-citeas" role="doc-biblioentry">
 César Díaz Tavera, and Juan Quiñonez Wu. 2022. <span>“Introduction to
 the Study Serie: Key Concepts to Understand Credit Scoring.”</span>
-September 5, 2022. <a href="https://cesardt97.github.io/Blog/posts/my-first-blog">https://cesardt97.github.io/Blog/posts/my-first-blog</a>.
+September 5, 2022. <a href="https://cesardt97.github.io/Blog/posts/series-sc/intro-to-the-study-serie/09-05-2022_intro_study_serie.html">https://cesardt97.github.io/Blog/posts/series-sc/intro-to-the-study-serie/09-05-2022_intro_study_serie.html</a>.
 </div></div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
@@ -456,78 +477,77 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb3" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Introduction to the study serie: key concepts to understand credit scoring"</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "The aim is to explain basic economic concepts in order to understand more fluently why a credit score is important."</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> </span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">  - name: César Díaz Tavera</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">    email: cesartavera97@gmail.com</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">  - name: Juan Quiñonez Wu</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">    email: jquinonez@gmail.com</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2022-09-05"</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span><span class="co"> [Credit Score, Economics, Information Asymmetry, Banking]</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> "sc.png"</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="an">citation:</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">  url: https://cesardt97.github.io/Blog/posts/my-first-blog</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="an">params:</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">  slug: key-concepts-credit-score</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">  date: 2022-09-05</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="in">```{r blogtheme, echo=FALSE, message=FALSE, warning=FALSE,include=FALSE}</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">'D:/USERDATA/2016061/OneDrive - BCRD/Documents/Blog/Blog-master'</span>)</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">'blog_theme.R'</span>)</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="fu">## **Definition of terms**</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>Adverse selection is a pre-contractual asymmetric information which often leads to making bad decisions, such as doing more business with less-profitable or riskier business. In the banking set up, it may involve extending credit facilities to a borrower with high likelihood of default<span class="ot">[^1]</span>.</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="ot">[^1]: </span>this is a footnote</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>Asymmetric information is known as information failure and occurs when one party to an economic transaction possesses greater and material knowledge over the other party. This often manifested typically<span class="ot">[^2]</span> where the seller of a good or service possesses greater knowledge than the buyer.</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="ot">[^2]: </span>Here is a foot note</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>Moral hazard on the other is post-contractual asymmetric information which occurs whenever a borrower engages in behaviors that are not in the best interest of the lender for example a borrower<span class="ot">[^3]</span> diverting use a bank loan to buy lottery tickets instead of purchase of merchandise for resale, as agreed upon with the lender. It is also moral hazard if a borrower fails to repay a loan when especially in a case where the facility is unsecured knowing well that the bank stands to lose.</span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="ot">[^3]: </span>Here's one with multiple blocks.</span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="in">    Subsequent paragraphs are indented to show that they belong to the previous footnote.</span></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="in">        { some.code }</span></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="in">    The whole paragraph can be indented, or just the first line. In this way, multi-paragraph footnotes work like multi-paragraph list items.</span></span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>Free-rider problems refers to a situation where an agent that collects information about a particular risk may be unable to prevent other agents from using that information for example a deposit insurance institution that is unable to price risk accurately.</span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>Rational herding refers to a situation whereby an agents choosing to disregard their own information and instead react to information on the decisions taken by other agents (information externalities).</span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="fu">## Implications whatever</span></span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>Information asymmetry between lenders and borrowers plays a key role in the field of finance and banking as one of the vital causes of financial frictions. Lenders do not know the creditworthiness of borrowers (hidden information) or cannot detect inefficient behavior of borrowers after lending (hidden action). For fear of lending to borrowers with poor credit worthiness or those that take inefficient behavior, lenders are unwilling to provide their own funds, which creates severe financial frictions. This is the problem of adverse selection (in the case of hidden information), or of moral hazard (in the case of hidden action).</span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>Presence of asymmetric information in the banking industry gives rise to wrong pricing patterns and selections. An asymmetric information-intensive market progressively draws away from being effective and fully competitive.</span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>In credit markets, asymmetric information avoids accurate transfer of the funds, and makes it difficult to both effectively utilize the savings and efficiently finance the investments. Proper pricing and transfer to the prospective investors of the funds is only possible if the parties have full and accurate information of each other. Otherwise, investments could not be financed at appropriate conditions, and results that would adversely impact the growth of national economy might arise.</span>
-<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a><span class="fu">### Preliminares: librerias usadas, datos y análisis de los retornos</span></span>
-<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="in">```{r librerias, echo=TRUE, message=FALSE, warning=FALSE, out.width = '800px', dpi=200}</span></span>
-<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">|&gt;</span> </span>
-<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> mpg, <span class="at">y =</span> wt)) <span class="sc">+</span></span>
-<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a><span class="co"># scale_fill_manual(values = c("#F4F4F4")) +</span></span>
-<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Fuel efficiency (mpg)"</span>, <span class="at">y=</span><span class="st">"Weight (tons)"</span>,</span>
-<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>       <span class="at">title=</span><span class="st">"Seminal ggplot2 scatterplot example"</span>,</span>
-<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle=</span><span class="st">"A plot that is only useful for demonstration purposes"</span>,</span>
-<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption=</span><span class="st">"Source: author's elaboration"</span>) <span class="sc">+</span></span>
-<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_blog</span>() </span>
-<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a><span class="fu">#### **Appendix**</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Introduction to the study serie: key concepts to understand credit scoring"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> |</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">    The aim is to explain basic economic concepts in order to understand more fluently why a credit score is important.</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> </span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">  - name: César Díaz Tavera</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">    email: cesartavera97@gmail.com</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">  - name: Juan Quiñonez Wu</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">    email: jquinonez@gmail.com</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2022-09-05"</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span><span class="co"> [Credit Score, Economics, Information Asymmetry, Banking]</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> "sc.png"</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="an">bibliography:</span><span class="co"> ref.bib</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="an">citation:</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">  url: https://cesardt97.github.io/Blog/posts/series-sc/intro-to-the-study-serie/09-05-2022_intro_study_serie.html</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="an">params:</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">  slug: key-concepts-credit-score</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">  date: 2022-09-05</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="in">```{r blogtheme, echo=FALSE, message=FALSE, warning=FALSE,include=FALSE}</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">'C:/Users/cesar/Documents/GitHub/Blog'</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">'blog_theme.R'</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="fu">## **Introduction**</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>The sustainable and healthy development of a country's financial system and banking sector is of utmost importance for economic growth. As banks are the main source of credit, they provide economic agents with funds to consume and invest, adding dynamism to the economic activity. However, the banking sector is full of risks. That is why risk management is an area of extreme importance and has remained a topic of major interest since the financial crisis of 2007-2008. Today, risk management is one of the central functions of financial institutions.</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>Because of its importance, <span class="co">[</span><span class="ot">Juan Quiñonez</span><span class="co">](https://juansqw.github.io/jquinonez/about.html)</span> and <span class="co">[</span><span class="ot">I</span><span class="co">](https://cesardt97.github.io/Blog/about.html)</span> have decided to carry out a brief series of studies where we consider a type of risk and, specifically, one of the ways in which it can be mitigated. We refer to credit risk and credit scores, respectively. This study series on credit score in banking will cover the following:</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Introduction to the study series: key concepts to understand credit scoring**</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>The Importance of a Credit Score</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Methodologies for Credit Score development</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>Logit model</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="ss">        -   </span>Out of sample evaluation</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="ss">        -   </span>Kolmogorov--Smirnov test</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>Machine learning models</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>Logit benchmark vs ML models</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>The goal of the study series is to better understand what a credit score is, why it is important, and how it is constructed. Explicitly, after briefly laying out a theoretical background on its importance, we aim to delved into the statistical techniques that are appropriate to construct a good credit score system. This article is the first in the series of studies and reviews the key economic concepts involved in the underlying problem that score credits try to mitigate.</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="fu">## **Definition of key concepts**</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>*Information asymmetry cause the healthy functioning of markets to disappear.*</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>Information is the basis of decision making. Whenever we want to do a transaction of any kind<span class="ot">[^1]</span> we try to collect as much information as possible in order to gain bargain power, or simply to be sure that the transaction is beneficial. Information asymmetry refers to a situation of imbalance in which, in a transaction of any kind, one of the interested parties has more or better information than the other, which creates inefficiency and even market failures in some cases. Popular examples of information asymmetry are moral hazard and adverse selection.</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="ot">[^1]: </span>i.e. a contractual arrangement, buy a car, or investment decisions.</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>Moral hazard is a post-contractual information asymmetry problem that occurs when one of the parties to a contract takes actions that represent additional risk (and thus are detrimental) to the other party, within the framework of what had been agreed. For example, if a borrower takes out a loan with the idea of starting a retail business with which he would pay the installment, but uses the money to travel, his probability of default increases, hence increasing in the lender's credit risk.</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>On the other hand, adverse selection is a pre-contractual problem that leads to bad decision<span class="ot">[^2]</span>. Since @akerlof1978market seminal article 'the market for lemons'<span class="ot">[^3]</span>, where he explains the concept and its implications in market dynamics, adverse selection has come to be seen as a fundamental cause of market failure. Housing, insurance, credit markets and others suffer constantly from this problem. Put simply, adverse selection is the problem of correctly distinguish between a good and a bad *product*[^4] when there is information asymmetry in an economic transaction. This problem arises because sometimes it is very costly/difficult to be fully informed about the quality or features of a *product*. In markets where this problem is consistent, the overall quality of the *products* at sell in the market significantly declines<span class="ot">[^5]</span>. In the banking industry, adverse selection is common as an issue concerning the provision of credit, since the intermediary can't know for sure who has a high probability of default.</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="ot">[^2]: </span>Such as doing more business with less-profitable or riskier business <span class="co">[</span><span class="ot">@hayes_2022</span><span class="co">]</span>.</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="ot">[^3]: </span>In this paper, Akerlof exemplify adverse selection with an analogy concerning the market of used cars: in the market exists good cars, and bad cards (Akerlof refer to those as lemons). The problem comes because when buying a car, the owner and seller of the car clearly knows the conditions of his property, while the buyer ignore its characteristics. If the buyer where to know that the car his buying is good, he would pay the right price for it. However, Akerlof suggests that this is not possible to know for sure. Therefore, since the buyer must take into account the probability that the car, he buys may be good or bad, he will lower the price he is willing to pay for a used car so that it is close to the average market price (it should be noted that the seller of the lemon would be happy with any price greater than or equal to its market value, which in this case is the lower limit). However, the sellers of the good cars will be unwilling to sell for a lower price, forcing them out of the market. On aggregate, the average quality of vehicles on the market would drop with the exit of the best sellers, again lowering the buyer's price and again driving the average quality cars out of the market. Thus, creating a major market failure where the only buying options are 'lemons'.</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="ot">[^4]: </span>We refer to product as the counterparty in a transaction, or the merchandise they are selling.</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="ot">[^5]: </span>Hence, the selection from the pool of products becomes adverse</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="sc">\[</span>Something about risk<span class="sc">\]</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="sc">\[</span>Something about credit risk and default risk<span class="sc">\]</span></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>Finally, I would like you to take away the idea of why effective supervision is important for the banking sector. @inbook : *The main purpose of surveillance and supervision is to ensure that banks retain sufficient capital against the risks they bear and to ensure that they operate in an environment where reliable conditions are created. Effective surveillance and supervision in banking plays a critical role in ensuring stability in the financial system of every country. It provides the benefits in free market conditions and in the implementation of effective macroeconomic policies.*</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>In the next article in this series of studies we will delve into how these concepts are interrelated, their implications for the banking industry, and why a good credit scoring system is important for financial institutions.</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="fu">#### **References**</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

@@ -8,7 +8,7 @@ date: 2022-08-30
 categories: [Financial Econometric, GARCH, Volatility]
 image: "financial-econometrics.png"
 citation:
-  url: https://cesardt97.github.io/Blog/posts/my-first-blog
+  url: https://cesardt97.github.io/Blog/posts/volatility-financial-asset/2022-08-30_volatility_financial_asset.html
 params:
   slug: volatily-financial-asset
   date: 2022-08-30
@@ -119,12 +119,12 @@ plot(garchvol, main = "Estimated Volatility")
 # Calculate the unconditional volatility and standardized returns.
 kable(sqrt(uncvariance(garchfit)), digits = 4, booktabs = T,
       col.names ="Unconditional inflation volatility")
-
-stdret <- residuals(garchfit, standardize = TRUE)
 ```
 
 ```{r error distribution comparison, echo=TRUE, fig.height = 4}
 # Visual comparison of error distribution
+stdret <- residuals(garchfit, standardize = TRUE)
+
 chart.Histogram(stdret, methods = c("add.normal","add.density"), 
                 colorset = c("gray","red","blue"), 
                 main = "Distribution of standardized returns vs. normal dist.")
@@ -177,9 +177,9 @@ colnames(information_criteria) <- c("Garch", "gjrGarch")
 
 kable(rbind(information_criteria, likelihood), booktabs = T,
       col.names = c("Garch", "gjrGarch"),
-      digits = 4, format = "latex",
+      digits = 4,
       caption = "Information Criteria for Conditional Heteroscedasticity Models") %>% 
-  kable_styling(full_width = T, latex_options = c("hold_position"))
+  kable_styling(full_width = T)
 ```
 
 Based on the information criteria, it is concluded that the GJR-GARCH model with t-Student distribution is a more adequate and realistic model than a simple model with normal distribution.
@@ -200,12 +200,13 @@ argarchspec <- ugarchspec(mean.model = list(armaOrder = c(1,0)),
 
 argarchfit <- ugarchfit(data =  sp500ret, spec = garchspec)
 
-# Coefficients of the mean model
-kable(coef(argarchfit)[c(1:2)], digits = 6, booktabs = T, format.args = list(scientific = FALSE), col.names ="Coeficientes del modelo GARCH con una especificación AR(1) en la media condicional")
-
 # Mean and volatility of the AR(1) model
 ar1_mean <- fitted(argarchfit)
 ar1_vol <- sigma(argarchfit)
+
+# Coefficients of the mean model
+kable(coef(argarchfit)[c(1:2)], digits = 6, booktabs = T, format.args = list(scientific = FALSE), col.names ="Coeficientes del modelo GARCH con una especificación AR(1) en la media condicional") %>% 
+  kable_styling(full_width = T)
 ```
 
 Since the AR(1) coefficient in the mean model is negative, we find a reversal effect in terms of predicted return. After an above-average return, we expect a below-average return. And after below-average return, we expect above-average return. Also, since this coefficient is close to zero, deviations from daily returns are transitory.
@@ -227,7 +228,7 @@ gim_vol <- sigma(gim_garchfit)
 
 # Correlation between the estimated returns of the AR(1) model and the average model
 kable(cor(ar1_mean, gim_mean), 
-      col.names = "Correlación entre los retornos estimados del modelo Garch-AR(1) y el modelo Garch en media", format = "latex", digits = 4, booktabs = T) %>%
+      col.names = "Correlación entre los retornos estimados del modelo Garch-AR(1) y el modelo Garch en media", digits = 4, booktabs = T) %>%
   kable_styling(full_width = T)
 
 # Correlation between the estimated returns of the mean model and the AR(1) model
@@ -236,7 +237,7 @@ rownames(model_correlation) <- c("gjrGarch", "AR(1)", "Garch in mean")
 colnames(model_correlation) <- c("gjrGarch", "AR(1)", "Garch in mean")
 
 kable(model_correlation, booktabs = T,
-      digits = 4, format = "latex",
+      digits = 4,
       caption = "Correlation between estimated volatilities for different specifications of Garch models") %>% 
   kable_styling(full_width = T)
 
@@ -280,17 +281,17 @@ colnames(information_criteria_2) <- c("gjrGarch", "tarGarch")
 
 kable(rbind(information_criteria_2, likelihood_2), booktabs = T,
       col.names = c("gjrGarch", "Volatility targeting gjrGarch"),
-      digits = 4, format = "latex",
+      digits = 4,
       caption = "Information Criteria for GARCH models with volatility targeting") %>% 
-  kable_styling(full_width = T, latex_options = c("hold_position"))
+  kable_styling(full_width = T)
 
 # Implied long term volatility
 kable(data.frame(Garch = sqrt(uncvariance(garchfit)), 
                  tarGarch = sqrt(uncvariance(targarchfit))), 
       col.names = c("Simple GARCH model", "GJR-Garch model with volatility targeting"), 
-      format = "latex", digits = 4, booktabs = T,
+      digits = 4, booktabs = T,
       caption = "Implied long-term volatility") %>%
-  kable_styling(full_width = T, latex_options = c("hold_position"))
+  kable_styling(full_width = T)
 
 ```
 

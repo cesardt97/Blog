@@ -15,4 +15,6 @@ about:
       href: https://github.com
 ---
 
-Este blog es un repositorio donde comparto ideas, códigos o artículos de opinión propia sobre temas que me parecen interesantes. Sientanse en la total libertad de contactarme si tienen una duda, desean debatir una idea o simplemente quieren conectar conmigo!
+I studied mathematics with a concentration in statistics and actuarial science, and finished my masters degree in economics with concentration in financial economics in 2022. I'm currently working at the Central Bank of the Dominican Republic as an Economist, where I am responsible for the short-term analysis of the national and international economy to shed light on market conditions for policymakers. This is done through economic research and the development of economic indicators with econometric and machine learning models. I have strong problem-solving skills and I'm really passionate about data-centric solutions, data visualization and statistical modelling. I mainly work in the programming language R, but I'm also versed in Python and SQL.
+
+

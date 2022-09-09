@@ -20,73 +20,78 @@
 
 
 
-<section id="definition-of-terms" class="level2">
-<h2 class="anchored" data-anchor-id="definition-of-terms"><strong>Definition of terms</strong></h2>
-<p>Adverse selection is a pre-contractual asymmetric information which often leads to making bad decisions, such as doing more business with less-profitable or riskier business. In the banking set up, it may involve extending credit facilities to a borrower with high likelihood of default<sup>1</sup>.</p>
-<p>Asymmetric information is known as information failure and occurs when one party to an economic transaction possesses greater and material knowledge over the other party. This often manifested typically<sup>2</sup> where the seller of a good or service possesses greater knowledge than the buyer.</p>
-<p>Moral hazard on the other is post-contractual asymmetric information which occurs whenever a borrower engages in behaviors that are not in the best interest of the lender for example a borrower<sup>3</sup> diverting use a bank loan to buy lottery tickets instead of purchase of merchandise for resale, as agreed upon with the lender. It is also moral hazard if a borrower fails to repay a loan when especially in a case where the facility is unsecured knowing well that the bank stands to lose.</p>
-<p>Free-rider problems refers to a situation where an agent that collects information about a particular risk may be unable to prevent other agents from using that information for example a deposit insurance institution that is unable to price risk accurately.</p>
-<p>Rational herding refers to a situation whereby an agents choosing to disregard their own information and instead react to information on the decisions taken by other agents (information externalities).</p>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction"><strong>Introduction</strong></h2>
+<p>The sustainable and healthy development of a country’s financial system and banking sector is of utmost importance for economic growth. As banks are the main source of credit, they provide economic agents with funds to consume and invest, adding dynamism to the economic activity. However, the banking sector is full of risks. That is why risk management is an area of extreme importance and has remained a topic of major interest since the financial crisis of 2007-2008. Today, risk management is one of the central functions of financial institutions.</p>
+<p>Because of its importance, <a href="https://juansqw.github.io/jquinonez/about.html">Juan Quiñonez</a> and <a href="https://cesardt97.github.io/Blog/about.html">I</a> have decided to carry out a brief series of studies where we consider a type of risk and, specifically, one of the ways in which it can be mitigated. We refer to credit risk and credit scores, respectively. This study series on credit score in banking will cover the following:</p>
+<ul>
+<li><strong>Introduction to the study series: key concepts to understand credit scoring</strong></li>
+<li>The Importance of a Credit Score</li>
+<li>Methodologies for Credit Score development
+<ul>
+<li>Logit model
+<ul>
+<li>Out of sample evaluation</li>
+<li>Kolmogorov–Smirnov test</li>
+</ul></li>
+<li>Machine learning models</li>
+<li>Logit benchmark vs ML models</li>
+</ul></li>
+</ul>
+<p>The goal of the study series is to better understand what a credit score is, why it is important, and how it is constructed. Explicitly, after briefly laying out a theoretical background on its importance, we aim to delved into the statistical techniques that are appropriate to construct a good credit score system. This article is the first in the series of studies and reviews the key economic concepts involved in the underlying problem that score credits try to mitigate.</p>
 </section>
-<section id="implications-whatever" class="level2">
-<h2 class="anchored" data-anchor-id="implications-whatever">Implications whatever</h2>
-<p>Information asymmetry between lenders and borrowers plays a key role in the field of finance and banking as one of the vital causes of financial frictions. Lenders do not know the creditworthiness of borrowers (hidden information) or cannot detect inefficient behavior of borrowers after lending (hidden action). For fear of lending to borrowers with poor credit worthiness or those that take inefficient behavior, lenders are unwilling to provide their own funds, which creates severe financial frictions. This is the problem of adverse selection (in the case of hidden information), or of moral hazard (in the case of hidden action).</p>
-<p>Presence of asymmetric information in the banking industry gives rise to wrong pricing patterns and selections. An asymmetric information-intensive market progressively draws away from being effective and fully competitive.</p>
-<p>In credit markets, asymmetric information avoids accurate transfer of the funds, and makes it difficult to both effectively utilize the savings and efficiently finance the investments. Proper pricing and transfer to the prospective investors of the funds is only possible if the parties have full and accurate information of each other. Otherwise, investments could not be financed at appropriate conditions, and results that would adversely impact the growth of national economy might arise.</p>
-<section id="preliminares-librerias-usadas-datos-y-análisis-de-los-retornos" class="level3">
-<h3 class="anchored" data-anchor-id="preliminares-librerias-usadas-datos-y-análisis-de-los-retornos">Preliminares: librerias usadas, datos y análisis de los retornos</h3>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;">library</span>(ggplot2)</span>
-<span id="cb2-2"></span>
-<span id="cb2-3">mtcars <span class="sc" style="color: #5E5E5E;">|&gt;</span> </span>
-<span id="cb2-4">  <span class="fu" style="color: #4758AB;">ggplot</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">x =</span> mpg, <span class="at" style="color: #657422;">y =</span> wt)) <span class="sc" style="color: #5E5E5E;">+</span></span>
-<span id="cb2-5">  <span class="fu" style="color: #4758AB;">geom_point</span>(<span class="at" style="color: #657422;">color =</span> <span class="st" style="color: #20794D;">"black"</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
-<span id="cb2-6"><span class="co" style="color: #5E5E5E;"># scale_fill_manual(values = c("#F4F4F4")) +</span></span>
-<span id="cb2-7">  <span class="fu" style="color: #4758AB;">labs</span>(<span class="at" style="color: #657422;">x=</span><span class="st" style="color: #20794D;">"Fuel efficiency (mpg)"</span>, <span class="at" style="color: #657422;">y=</span><span class="st" style="color: #20794D;">"Weight (tons)"</span>,</span>
-<span id="cb2-8">       <span class="at" style="color: #657422;">title=</span><span class="st" style="color: #20794D;">"Seminal ggplot2 scatterplot example"</span>,</span>
-<span id="cb2-9">       <span class="at" style="color: #657422;">subtitle=</span><span class="st" style="color: #20794D;">"A plot that is only useful for demonstration purposes"</span>,</span>
-<span id="cb2-10">       <span class="at" style="color: #657422;">caption=</span><span class="st" style="color: #20794D;">"Source: author's elaboration"</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
-<span id="cb2-11">  <span class="fu" style="color: #4758AB;">theme_blog</span>() </span></code></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="https://cesardt97.github.io/posts/series-sc/intro-to-the-study-serie/09-05-2022_intro_study_serie_files/figure-html/librerias-1.png" class="img-fluid" width="800"></p>
-</div>
-</div>
-<section id="appendix" class="level4">
-<h4 class="anchored" data-anchor-id="appendix"><strong>Appendix</strong></h4>
+<section id="definition-of-key-concepts" class="level2">
+<h2 class="anchored" data-anchor-id="definition-of-key-concepts"><strong>Definition of key concepts</strong></h2>
+<p><em>Information asymmetry cause the healthy functioning of markets to disappear.</em></p>
+<p>Information is the basis of decision making. Whenever we want to do a transaction of any kind<sup>1</sup> we try to collect as much information as possible in order to gain bargain power, or simply to be sure that the transaction is beneficial. Information asymmetry refers to a situation of imbalance in which, in a transaction of any kind, one of the interested parties has more or better information than the other, which creates inefficiency and even market failures in some cases. Popular examples of information asymmetry are moral hazard and adverse selection.</p>
+<p>Moral hazard is a post-contractual information asymmetry problem that occurs when one of the parties to a contract takes actions that represent additional risk (and thus are detrimental) to the other party, within the framework of what had been agreed. For example, if a borrower takes out a loan with the idea of starting a retail business with which he would pay the installment, but uses the money to travel, his probability of default increases, hence increasing in the lender’s credit risk.</p>
+<p>On the other hand, adverse selection is a pre-contractual problem that leads to bad decision<sup>2</sup>. Since <span class="citation" data-cites="akerlof1978market">Akerlof (1978)</span> seminal article ‘the market for lemons’<sup>3</sup>, where he explains the concept and its implications in market dynamics, adverse selection has come to be seen as a fundamental cause of market failure. Housing, insurance, credit markets and others suffer constantly from this problem. Put simply, adverse selection is the problem of correctly distinguish between a good and a bad <em>product</em><sup>4</sup> when there is information asymmetry in an economic transaction. This problem arises because sometimes it is very costly/difficult to be fully informed about the quality or features of a <em>product</em>. In markets where this problem is consistent, the overall quality of the <em>products</em> at sell in the market significantly declines<sup>5</sup>. In the banking industry, adverse selection is common as an issue concerning the provision of credit, since the intermediary can’t know for sure who has a high probability of default.</p>
+<p>[Something about risk]</p>
+<p>[Something about credit risk and default risk]</p>
+<p>Finally, I would like you to take away the idea of why effective supervision is important for the banking sector. <span class="citation" data-cites="inbook">Gündüz (2020)</span> : <em>The main purpose of surveillance and supervision is to ensure that banks retain sufficient capital against the risks they bear and to ensure that they operate in an environment where reliable conditions are created. Effective surveillance and supervision in banking plays a critical role in ensuring stability in the financial system of every country. It provides the benefits in free market conditions and in the implementation of effective macroeconomic policies.</em></p>
+<p>In the next article in this series of studies we will delve into how these concepts are interrelated, their implications for the banking industry, and why a good credit scoring system is important for financial institutions.</p>
+<section id="references" class="level4">
+
 
 
 <!-- -->
 
-</section>
+
 </section>
 </section>
 
 
-<div id="quarto-appendix" class="default"><section class="footnotes footnotes-end-of-document"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-akerlof1978market" class="csl-entry">
+Akerlof, George A. 1978. <span>“The Market for <span>‘Lemons’</span>: Quality Uncertainty and the Market Mechanism.”</span> In <em>Uncertainty in Economics</em>, 235–51. Elsevier.
+</div>
+<div id="ref-inbook" class="csl-entry">
+Gündüz, Veclal. 2020. <span>“Risk Management in Banking Sector.”</span> In, 121–35.
+</div>
+<div id="ref-hayes_2022" class="csl-entry">
+Hayes, Adam. 2022. <span>“Adverse Selection.”</span> Investopedia. <a href="https://www.investopedia.com/terms/a/adverseselection.asp">https://www.investopedia.com/terms/a/adverseselection.asp</a>.
+</div>
+</div></section><section class="footnotes footnotes-end-of-document"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
 <ol>
-<li id="fn1"><p>this is a footnote↩︎</p></li>
-<li id="fn2"><p>Here is a foot note↩︎</p></li>
-<li id="fn3"><p>Here’s one with multiple blocks.</p>
-<p>Subsequent paragraphs are indented to show that they belong to the previous footnote.</p>
-<pre><code>{ some.code }</code></pre>
-<p>The whole paragraph can be indented, or just the first line. In this way, multi-paragraph footnotes work like multi-paragraph list items.↩︎</p></li>
+<li id="fn1"><p>i.e.&nbsp;a contractual arrangement, buy a car, or investment decisions.↩︎</p></li>
+<li id="fn2"><p>Such as doing more business with less-profitable or riskier business <span class="citation" data-cites="hayes_2022">(Hayes 2022)</span>.↩︎</p></li>
+<li id="fn3"><p>In this paper, Akerlof exemplify adverse selection with an analogy concerning the market of used cars: in the market exists good cars, and bad cards (Akerlof refer to those as lemons). The problem comes because when buying a car, the owner and seller of the car clearly knows the conditions of his property, while the buyer ignore its characteristics. If the buyer where to know that the car his buying is good, he would pay the right price for it. However, Akerlof suggests that this is not possible to know for sure. Therefore, since the buyer must take into account the probability that the car, he buys may be good or bad, he will lower the price he is willing to pay for a used car so that it is close to the average market price (it should be noted that the seller of the lemon would be happy with any price greater than or equal to its market value, which in this case is the lower limit). However, the sellers of the good cars will be unwilling to sell for a lower price, forcing them out of the market. On aggregate, the average quality of vehicles on the market would drop with the exit of the best sellers, again lowering the buyer’s price and again driving the average quality cars out of the market. Thus, creating a major market failure where the only buying options are ‘lemons’.↩︎</p></li>
+<li id="fn4"><p>We refer to product as the counterparty in a transaction, or the merchandise they are selling.↩︎</p></li>
+<li id="fn5"><p>Hence, the selection from the pool of products becomes adverse↩︎</p></li>
 </ol>
 </section><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div quarto-reuse="quarto-reuse" class="quarto-appendix-contents"><a rel="license" href="https://creativecommons.org/licenses/by/4.0/">https://creativecommons.org/licenses/by/4.0/</a></div></section><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{díaztavera2022,
   author = {César Díaz Tavera and Juan Quiñonez Wu},
   title = {Introduction to the Study Serie: Key Concepts to Understand
     Credit Scoring},
   date = {2022-09-05},
-  url = {https://cesardt97.github.io/Blog/posts/my-first-blog},
+  url = {https://cesardt97.github.io/Blog/posts/series-sc/intro-to-the-study-serie/09-05-2022_intro_study_serie.html},
   langid = {en}
 }
 </code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-díaztavera2022" class="csl-entry quarto-appendix-citeas">
 César Díaz Tavera, and Juan Quiñonez Wu. 2022. <span>“Introduction to
 the Study Serie: Key Concepts to Understand Credit Scoring.”</span>
-September 5, 2022. <a href="https://cesardt97.github.io/Blog/posts/my-first-blog">https://cesardt97.github.io/Blog/posts/my-first-blog</a>.
+September 5, 2022. <a href="https://cesardt97.github.io/Blog/posts/series-sc/intro-to-the-study-serie/09-05-2022_intro_study_serie.html">https://cesardt97.github.io/Blog/posts/series-sc/intro-to-the-study-serie/09-05-2022_intro_study_serie.html</a>.
 </div></div></section></div> ]]></description>
   <category>Credit Score</category>
   <category>Economics</category>
@@ -271,18 +276,16 @@ September 5, 2022. <a href="https://cesardt97.github.io/Blog/posts/my-first-blog
 </table>
 
 </div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">stdret <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">residuals</span>(garchfit, <span class="at" style="color: #657422;">standardize =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)</span></code></pre></div>
-</details>
 </div>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="co" style="color: #5E5E5E;"># Visual comparison of error distribution</span></span>
-<span id="cb8-2"><span class="fu" style="color: #4758AB;">chart.Histogram</span>(stdret, <span class="at" style="color: #657422;">methods =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"add.normal"</span>,<span class="st" style="color: #20794D;">"add.density"</span>), </span>
-<span id="cb8-3">                <span class="at" style="color: #657422;">colorset =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"gray"</span>,<span class="st" style="color: #20794D;">"red"</span>,<span class="st" style="color: #20794D;">"blue"</span>), </span>
-<span id="cb8-4">                <span class="at" style="color: #657422;">main =</span> <span class="st" style="color: #20794D;">"Distribution of standardized returns vs. normal dist."</span>)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="co" style="color: #5E5E5E;"># Visual comparison of error distribution</span></span>
+<span id="cb7-2">stdret <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">residuals</span>(garchfit, <span class="at" style="color: #657422;">standardize =</span> <span class="cn" style="color: #8f5902;">TRUE</span>)</span>
+<span id="cb7-3"></span>
+<span id="cb7-4"><span class="fu" style="color: #4758AB;">chart.Histogram</span>(stdret, <span class="at" style="color: #657422;">methods =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"add.normal"</span>,<span class="st" style="color: #20794D;">"add.density"</span>), </span>
+<span id="cb7-5">                <span class="at" style="color: #657422;">colorset =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"gray"</span>,<span class="st" style="color: #20794D;">"red"</span>,<span class="st" style="color: #20794D;">"blue"</span>), </span>
+<span id="cb7-6">                <span class="at" style="color: #657422;">main =</span> <span class="st" style="color: #20794D;">"Distribution of standardized returns vs. normal dist."</span>)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="https://cesardt97.github.io/posts/volatility-financial-asset/2022-08-30_volatility_financial_asset_files/figure-html/error%20distribution%20comparison-1.png" class="img-fluid" width="672"></p>
@@ -293,23 +296,23 @@ September 5, 2022. <a href="https://cesardt97.github.io/Blog/posts/my-first-blog
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="co" style="color: #5E5E5E;"># GJR-GARCH Specification</span></span>
-<span id="cb9-2">gjrgarchspec <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">ugarchspec</span>(<span class="at" style="color: #657422;">mean.model =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">armaOrder =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">0</span>,<span class="dv" style="color: #AD0000;">0</span>)),</span>
-<span id="cb9-3">                           <span class="at" style="color: #657422;">variance.model =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">model =</span> <span class="st" style="color: #20794D;">"gjrGARCH"</span>),</span>
-<span id="cb9-4">                           <span class="at" style="color: #657422;">distribution.model =</span> <span class="st" style="color: #20794D;">"sstd"</span>)</span>
-<span id="cb9-5"></span>
-<span id="cb9-6">gjrgarchfit <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">ugarchfit</span>(<span class="at" style="color: #657422;">data =</span> sp500ret, <span class="at" style="color: #657422;">spec =</span> gjrgarchspec)</span>
-<span id="cb9-7"></span>
-<span id="cb9-8"><span class="co" style="color: #5E5E5E;"># Obtain the estimated volatility </span></span>
-<span id="cb9-9">gjrgarchvol_mean <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fitted</span>(gjrgarchfit)</span>
-<span id="cb9-10">gjrgarchvol <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">sigma</span>(gjrgarchfit)</span>
-<span id="cb9-11"> </span>
-<span id="cb9-12"><span class="co" style="color: #5E5E5E;"># Compare estimated volatilities</span></span>
-<span id="cb9-13">plotvol <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">plot</span>(<span class="fu" style="color: #4758AB;">abs</span>(sp500ret), <span class="at" style="color: #657422;">col =</span> <span class="st" style="color: #20794D;">"grey"</span>, </span>
-<span id="cb9-14">                <span class="at" style="color: #657422;">main =</span> <span class="st" style="color: #20794D;">"Estimated returns and volatilities"</span>)</span>
-<span id="cb9-15">plotvol <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">addSeries</span>(gjrgarchvol, <span class="at" style="color: #657422;">col =</span> <span class="st" style="color: #20794D;">"red"</span>, <span class="at" style="color: #657422;">on=</span><span class="dv" style="color: #AD0000;">1</span>)</span>
-<span id="cb9-16">plotvol <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">addSeries</span>(garchvol, <span class="at" style="color: #657422;">col =</span> <span class="st" style="color: #20794D;">"blue"</span>, <span class="at" style="color: #657422;">on=</span><span class="dv" style="color: #AD0000;">1</span>)</span>
-<span id="cb9-17">plotvol</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="co" style="color: #5E5E5E;"># GJR-GARCH Specification</span></span>
+<span id="cb8-2">gjrgarchspec <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">ugarchspec</span>(<span class="at" style="color: #657422;">mean.model =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">armaOrder =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">0</span>,<span class="dv" style="color: #AD0000;">0</span>)),</span>
+<span id="cb8-3">                           <span class="at" style="color: #657422;">variance.model =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">model =</span> <span class="st" style="color: #20794D;">"gjrGARCH"</span>),</span>
+<span id="cb8-4">                           <span class="at" style="color: #657422;">distribution.model =</span> <span class="st" style="color: #20794D;">"sstd"</span>)</span>
+<span id="cb8-5"></span>
+<span id="cb8-6">gjrgarchfit <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">ugarchfit</span>(<span class="at" style="color: #657422;">data =</span> sp500ret, <span class="at" style="color: #657422;">spec =</span> gjrgarchspec)</span>
+<span id="cb8-7"></span>
+<span id="cb8-8"><span class="co" style="color: #5E5E5E;"># Obtain the estimated volatility </span></span>
+<span id="cb8-9">gjrgarchvol_mean <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fitted</span>(gjrgarchfit)</span>
+<span id="cb8-10">gjrgarchvol <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">sigma</span>(gjrgarchfit)</span>
+<span id="cb8-11"> </span>
+<span id="cb8-12"><span class="co" style="color: #5E5E5E;"># Compare estimated volatilities</span></span>
+<span id="cb8-13">plotvol <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">plot</span>(<span class="fu" style="color: #4758AB;">abs</span>(sp500ret), <span class="at" style="color: #657422;">col =</span> <span class="st" style="color: #20794D;">"grey"</span>, </span>
+<span id="cb8-14">                <span class="at" style="color: #657422;">main =</span> <span class="st" style="color: #20794D;">"Estimated returns and volatilities"</span>)</span>
+<span id="cb8-15">plotvol <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">addSeries</span>(gjrgarchvol, <span class="at" style="color: #657422;">col =</span> <span class="st" style="color: #20794D;">"red"</span>, <span class="at" style="color: #657422;">on=</span><span class="dv" style="color: #AD0000;">1</span>)</span>
+<span id="cb8-16">plotvol <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">addSeries</span>(garchvol, <span class="at" style="color: #657422;">col =</span> <span class="st" style="color: #20794D;">"blue"</span>, <span class="at" style="color: #657422;">on=</span><span class="dv" style="color: #AD0000;">1</span>)</span>
+<span id="cb8-17">plotvol</span></code></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="https://cesardt97.github.io/posts/volatility-financial-asset/2022-08-30_volatility_financial_asset_files/figure-html/GJR-Garch-1.png" class="img-fluid" width="672"></p>
@@ -318,8 +321,8 @@ September 5, 2022. <a href="https://cesardt97.github.io/Blog/posts/my-first-blog
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="co" style="color: #5E5E5E;"># News Curve</span></span>
-<span id="cb10-2"><span class="fu" style="color: #4758AB;">plot</span>(gjrgarchfit, <span class="at" style="color: #657422;">which =</span> <span class="dv" style="color: #AD0000;">12</span>)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="co" style="color: #5E5E5E;"># News Curve</span></span>
+<span id="cb9-2"><span class="fu" style="color: #4758AB;">plot</span>(gjrgarchfit, <span class="at" style="color: #657422;">which =</span> <span class="dv" style="color: #AD0000;">12</span>)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="https://cesardt97.github.io/posts/volatility-financial-asset/2022-08-30_volatility_financial_asset_files/figure-html/News%20Curve-1.png" class="img-fluid" width="672"></p>
@@ -330,24 +333,62 @@ September 5, 2022. <a href="https://cesardt97.github.io/Blog/posts/my-first-blog
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="co" style="color: #5E5E5E;"># log-likelihood of both models</span></span>
-<span id="cb11-2">likelihood <span class="ot" style="color: #003B4F;">&lt;-</span> </span>
-<span id="cb11-3">  <span class="fu" style="color: #4758AB;">data.frame</span>(<span class="at" style="color: #657422;">Garch =</span> <span class="fu" style="color: #4758AB;">likelihood</span>(garchfit), <span class="at" style="color: #657422;">gjrGarch =</span> <span class="fu" style="color: #4758AB;">likelihood</span>(gjrgarchfit))</span>
-<span id="cb11-4"><span class="fu" style="color: #4758AB;">rownames</span>(likelihood) <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="st" style="color: #20794D;">"Log-Likelihood"</span></span>
-<span id="cb11-5"></span>
-<span id="cb11-6"><span class="co" style="color: #5E5E5E;"># Information criteria</span></span>
-<span id="cb11-7">information_criteria <span class="ot" style="color: #003B4F;">&lt;-</span> </span>
-<span id="cb11-8">  <span class="fu" style="color: #4758AB;">data.frame</span>(<span class="at" style="color: #657422;">Garch =</span> <span class="fu" style="color: #4758AB;">infocriteria</span>(garchfit), <span class="at" style="color: #657422;">gjrGarch =</span> <span class="fu" style="color: #4758AB;">infocriteria</span>(gjrgarchfit))</span>
-<span id="cb11-9"></span>
-<span id="cb11-10"><span class="fu" style="color: #4758AB;">colnames</span>(information_criteria) <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"Garch"</span>, <span class="st" style="color: #20794D;">"gjrGarch"</span>)</span>
-<span id="cb11-11"></span>
-<span id="cb11-12"><span class="fu" style="color: #4758AB;">kable</span>(<span class="fu" style="color: #4758AB;">rbind</span>(information_criteria, likelihood), <span class="at" style="color: #657422;">booktabs =</span> T,</span>
-<span id="cb11-13">      <span class="at" style="color: #657422;">col.names =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"Garch"</span>, <span class="st" style="color: #20794D;">"gjrGarch"</span>),</span>
-<span id="cb11-14">      <span class="at" style="color: #657422;">digits =</span> <span class="dv" style="color: #AD0000;">4</span>, <span class="at" style="color: #657422;">format =</span> <span class="st" style="color: #20794D;">"latex"</span>,</span>
-<span id="cb11-15">      <span class="at" style="color: #657422;">caption =</span> <span class="st" style="color: #20794D;">"Information Criteria for Conditional Heteroscedasticity Models"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
-<span id="cb11-16">  <span class="fu" style="color: #4758AB;">kable_styling</span>(<span class="at" style="color: #657422;">full_width =</span> T, <span class="at" style="color: #657422;">latex_options =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"hold_position"</span>))</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="co" style="color: #5E5E5E;"># log-likelihood of both models</span></span>
+<span id="cb10-2">likelihood <span class="ot" style="color: #003B4F;">&lt;-</span> </span>
+<span id="cb10-3">  <span class="fu" style="color: #4758AB;">data.frame</span>(<span class="at" style="color: #657422;">Garch =</span> <span class="fu" style="color: #4758AB;">likelihood</span>(garchfit), <span class="at" style="color: #657422;">gjrGarch =</span> <span class="fu" style="color: #4758AB;">likelihood</span>(gjrgarchfit))</span>
+<span id="cb10-4"><span class="fu" style="color: #4758AB;">rownames</span>(likelihood) <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="st" style="color: #20794D;">"Log-Likelihood"</span></span>
+<span id="cb10-5"></span>
+<span id="cb10-6"><span class="co" style="color: #5E5E5E;"># Information criteria</span></span>
+<span id="cb10-7">information_criteria <span class="ot" style="color: #003B4F;">&lt;-</span> </span>
+<span id="cb10-8">  <span class="fu" style="color: #4758AB;">data.frame</span>(<span class="at" style="color: #657422;">Garch =</span> <span class="fu" style="color: #4758AB;">infocriteria</span>(garchfit), <span class="at" style="color: #657422;">gjrGarch =</span> <span class="fu" style="color: #4758AB;">infocriteria</span>(gjrgarchfit))</span>
+<span id="cb10-9"></span>
+<span id="cb10-10"><span class="fu" style="color: #4758AB;">colnames</span>(information_criteria) <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"Garch"</span>, <span class="st" style="color: #20794D;">"gjrGarch"</span>)</span>
+<span id="cb10-11"></span>
+<span id="cb10-12"><span class="fu" style="color: #4758AB;">kable</span>(<span class="fu" style="color: #4758AB;">rbind</span>(information_criteria, likelihood), <span class="at" style="color: #657422;">booktabs =</span> T,</span>
+<span id="cb10-13">      <span class="at" style="color: #657422;">col.names =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"Garch"</span>, <span class="st" style="color: #20794D;">"gjrGarch"</span>),</span>
+<span id="cb10-14">      <span class="at" style="color: #657422;">digits =</span> <span class="dv" style="color: #AD0000;">4</span>,</span>
+<span id="cb10-15">      <span class="at" style="color: #657422;">caption =</span> <span class="st" style="color: #20794D;">"Information Criteria for Conditional Heteroscedasticity Models"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb10-16">  <span class="fu" style="color: #4758AB;">kable_styling</span>(<span class="at" style="color: #657422;">full_width =</span> T)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>Information Criteria for Conditional Heteroscedasticity Models</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> Garch </th>
+   <th style="text-align:right;"> gjrGarch </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Akaike </td>
+   <td style="text-align:right;"> -6.5656 </td>
+   <td style="text-align:right;"> -6.6531 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Bayes </td>
+   <td style="text-align:right;"> -6.5623 </td>
+   <td style="text-align:right;"> -6.6472 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Shibata </td>
+   <td style="text-align:right;"> -6.5656 </td>
+   <td style="text-align:right;"> -6.6531 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Hannan-Quinn </td>
+   <td style="text-align:right;"> -6.5645 </td>
+   <td style="text-align:right;"> -6.6511 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Log-Likelihood </td>
+   <td style="text-align:right;"> 27471.3350 </td>
+   <td style="text-align:right;"> 27840.3342 </td>
+  </tr>
+</tbody>
+</table>
 
 </div>
 </div>
@@ -361,19 +402,24 @@ September 5, 2022. <a href="https://cesardt97.github.io/Blog/posts/my-first-blog
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="co" style="color: #5E5E5E;"># AR(1) specification of an asymmetric GARCH</span></span>
-<span id="cb12-2">argarchspec <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">ugarchspec</span>(<span class="at" style="color: #657422;">mean.model =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">armaOrder =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>,<span class="dv" style="color: #AD0000;">0</span>)),</span>
-<span id="cb12-3">                        <span class="at" style="color: #657422;">variance.model =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">model =</span> <span class="st" style="color: #20794D;">"gjrGARCH"</span>),</span>
-<span id="cb12-4">                        <span class="at" style="color: #657422;">distribution.model =</span> <span class="st" style="color: #20794D;">"sstd"</span>)</span>
-<span id="cb12-5"></span>
-<span id="cb12-6">argarchfit <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">ugarchfit</span>(<span class="at" style="color: #657422;">data =</span>  sp500ret, <span class="at" style="color: #657422;">spec =</span> garchspec)</span>
-<span id="cb12-7"></span>
-<span id="cb12-8"><span class="co" style="color: #5E5E5E;"># Coefficients of the mean model</span></span>
-<span id="cb12-9"><span class="fu" style="color: #4758AB;">kable</span>(<span class="fu" style="color: #4758AB;">coef</span>(argarchfit)[<span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span><span class="sc" style="color: #5E5E5E;">:</span><span class="dv" style="color: #AD0000;">2</span>)], <span class="at" style="color: #657422;">digits =</span> <span class="dv" style="color: #AD0000;">6</span>, <span class="at" style="color: #657422;">booktabs =</span> T, <span class="at" style="color: #657422;">format.args =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">scientific =</span> <span class="cn" style="color: #8f5902;">FALSE</span>), <span class="at" style="color: #657422;">col.names =</span><span class="st" style="color: #20794D;">"Coeficientes del modelo GARCH con una especificación AR(1) en la media condicional"</span>)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="co" style="color: #5E5E5E;"># AR(1) specification of an asymmetric GARCH</span></span>
+<span id="cb11-2">argarchspec <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">ugarchspec</span>(<span class="at" style="color: #657422;">mean.model =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">armaOrder =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span>,<span class="dv" style="color: #AD0000;">0</span>)),</span>
+<span id="cb11-3">                        <span class="at" style="color: #657422;">variance.model =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">model =</span> <span class="st" style="color: #20794D;">"gjrGARCH"</span>),</span>
+<span id="cb11-4">                        <span class="at" style="color: #657422;">distribution.model =</span> <span class="st" style="color: #20794D;">"sstd"</span>)</span>
+<span id="cb11-5"></span>
+<span id="cb11-6">argarchfit <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">ugarchfit</span>(<span class="at" style="color: #657422;">data =</span>  sp500ret, <span class="at" style="color: #657422;">spec =</span> garchspec)</span>
+<span id="cb11-7"></span>
+<span id="cb11-8"><span class="co" style="color: #5E5E5E;"># Mean and volatility of the AR(1) model</span></span>
+<span id="cb11-9">ar1_mean <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fitted</span>(argarchfit)</span>
+<span id="cb11-10">ar1_vol <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">sigma</span>(argarchfit)</span>
+<span id="cb11-11"></span>
+<span id="cb11-12"><span class="co" style="color: #5E5E5E;"># Coefficients of the mean model</span></span>
+<span id="cb11-13"><span class="fu" style="color: #4758AB;">kable</span>(<span class="fu" style="color: #4758AB;">coef</span>(argarchfit)[<span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">1</span><span class="sc" style="color: #5E5E5E;">:</span><span class="dv" style="color: #AD0000;">2</span>)], <span class="at" style="color: #657422;">digits =</span> <span class="dv" style="color: #AD0000;">6</span>, <span class="at" style="color: #657422;">booktabs =</span> T, <span class="at" style="color: #657422;">format.args =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">scientific =</span> <span class="cn" style="color: #8f5902;">FALSE</span>), <span class="at" style="color: #657422;">col.names =</span><span class="st" style="color: #20794D;">"Coeficientes del modelo GARCH con una especificación AR(1) en la media condicional"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb11-14">  <span class="fu" style="color: #4758AB;">kable_styling</span>(<span class="at" style="color: #657422;">full_width =</span> T)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
 
-<table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
  <thead>
   <tr>
    <th style="text-align:left;">   </th>
@@ -393,51 +439,90 @@ September 5, 2022. <a href="https://cesardt97.github.io/Blog/posts/my-first-blog
 </table>
 
 </div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="co" style="color: #5E5E5E;"># Mean and volatility of the AR(1) model</span></span>
-<span id="cb13-2">ar1_mean <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fitted</span>(argarchfit)</span>
-<span id="cb13-3">ar1_vol <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">sigma</span>(argarchfit)</span></code></pre></div>
-</details>
 </div>
 <p>Since the AR(1) coefficient in the mean model is negative, we find a reversal effect in terms of predicted return. After an above-average return, we expect a below-average return. And after below-average return, we expect above-average return. Also, since this coefficient is close to zero, deviations from daily returns are transitory.</p>
 <p>In contrast to the use of an ARMA model for the mean, we have that a GARCH model in mean does not make use of the autocorrelation of returns. Instead, it exploits the relationship between the expected return and the variance of the return. The higher the risk in terms of variance, the higher the expected return of the investment should be. So it is a model that quantifies the trade-off between risk and reward.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="co" style="color: #5E5E5E;"># Specification of a GARCH in mean</span></span>
-<span id="cb14-2">gim_garchspec <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">ugarchspec</span>( </span>
-<span id="cb14-3">  <span class="at" style="color: #657422;">mean.model =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">armaOrder =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">0</span>,<span class="dv" style="color: #AD0000;">0</span>), <span class="at" style="color: #657422;">archm =</span> <span class="cn" style="color: #8f5902;">TRUE</span>, <span class="at" style="color: #657422;">archpow =</span> <span class="dv" style="color: #AD0000;">2</span>),</span>
-<span id="cb14-4">  <span class="at" style="color: #657422;">variance.model =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">model =</span> <span class="st" style="color: #20794D;">"gjrGARCH"</span>), </span>
-<span id="cb14-5">  <span class="at" style="color: #657422;">distribution.model =</span> <span class="st" style="color: #20794D;">"sstd"</span>)</span>
-<span id="cb14-6"></span>
-<span id="cb14-7">gim_garchfit <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">ugarchfit</span>(<span class="at" style="color: #657422;">data =</span> sp500ret , <span class="at" style="color: #657422;">spec =</span> gim_garchspec)</span>
-<span id="cb14-8"></span>
-<span id="cb14-9"><span class="co" style="color: #5E5E5E;"># Mean and volatility of the AR(1) model</span></span>
-<span id="cb14-10">gim_mean <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fitted</span>(gim_garchfit)</span>
-<span id="cb14-11">gim_vol <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">sigma</span>(gim_garchfit)</span>
-<span id="cb14-12"></span>
-<span id="cb14-13"><span class="co" style="color: #5E5E5E;"># Correlation between the estimated returns of the AR(1) model and the average model</span></span>
-<span id="cb14-14"><span class="fu" style="color: #4758AB;">kable</span>(<span class="fu" style="color: #4758AB;">cor</span>(ar1_mean, gim_mean), </span>
-<span id="cb14-15">      <span class="at" style="color: #657422;">col.names =</span> <span class="st" style="color: #20794D;">"Correlación entre los retornos estimados del modelo Garch-AR(1) y el modelo Garch en media"</span>, <span class="at" style="color: #657422;">format =</span> <span class="st" style="color: #20794D;">"latex"</span>, <span class="at" style="color: #657422;">digits =</span> <span class="dv" style="color: #AD0000;">4</span>, <span class="at" style="color: #657422;">booktabs =</span> T) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb14-16">  <span class="fu" style="color: #4758AB;">kable_styling</span>(<span class="at" style="color: #657422;">full_width =</span> T)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="co" style="color: #5E5E5E;"># Specification of a GARCH in mean</span></span>
+<span id="cb12-2">gim_garchspec <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">ugarchspec</span>( </span>
+<span id="cb12-3">  <span class="at" style="color: #657422;">mean.model =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">armaOrder =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">0</span>,<span class="dv" style="color: #AD0000;">0</span>), <span class="at" style="color: #657422;">archm =</span> <span class="cn" style="color: #8f5902;">TRUE</span>, <span class="at" style="color: #657422;">archpow =</span> <span class="dv" style="color: #AD0000;">2</span>),</span>
+<span id="cb12-4">  <span class="at" style="color: #657422;">variance.model =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">model =</span> <span class="st" style="color: #20794D;">"gjrGARCH"</span>), </span>
+<span id="cb12-5">  <span class="at" style="color: #657422;">distribution.model =</span> <span class="st" style="color: #20794D;">"sstd"</span>)</span>
+<span id="cb12-6"></span>
+<span id="cb12-7">gim_garchfit <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">ugarchfit</span>(<span class="at" style="color: #657422;">data =</span> sp500ret , <span class="at" style="color: #657422;">spec =</span> gim_garchspec)</span>
+<span id="cb12-8"></span>
+<span id="cb12-9"><span class="co" style="color: #5E5E5E;"># Mean and volatility of the AR(1) model</span></span>
+<span id="cb12-10">gim_mean <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">fitted</span>(gim_garchfit)</span>
+<span id="cb12-11">gim_vol <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">sigma</span>(gim_garchfit)</span>
+<span id="cb12-12"></span>
+<span id="cb12-13"><span class="co" style="color: #5E5E5E;"># Correlation between the estimated returns of the AR(1) model and the average model</span></span>
+<span id="cb12-14"><span class="fu" style="color: #4758AB;">kable</span>(<span class="fu" style="color: #4758AB;">cor</span>(ar1_mean, gim_mean), </span>
+<span id="cb12-15">      <span class="at" style="color: #657422;">col.names =</span> <span class="st" style="color: #20794D;">"Correlación entre los retornos estimados del modelo Garch-AR(1) y el modelo Garch en media"</span>, <span class="at" style="color: #657422;">digits =</span> <span class="dv" style="color: #AD0000;">4</span>, <span class="at" style="color: #657422;">booktabs =</span> T) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb12-16">  <span class="fu" style="color: #4758AB;">kable_styling</span>(<span class="at" style="color: #657422;">full_width =</span> T)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> Correlación entre los retornos estimados del modelo Garch-AR(1) y el modelo Garch en media </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 0.4406 </td>
+  </tr>
+</tbody>
+</table>
 
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="co" style="color: #5E5E5E;"># Correlation between the estimated returns of the mean model and the AR(1) model</span></span>
-<span id="cb15-2">model_correlation <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">as.data.frame</span>(<span class="fu" style="color: #4758AB;">cor</span>(<span class="fu" style="color: #4758AB;">merge</span>(gjrgarchvol, ar1_vol, gim_vol)))</span>
-<span id="cb15-3"><span class="fu" style="color: #4758AB;">rownames</span>(model_correlation) <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"gjrGarch"</span>, <span class="st" style="color: #20794D;">"AR(1)"</span>, <span class="st" style="color: #20794D;">"Garch in mean"</span>)</span>
-<span id="cb15-4"><span class="fu" style="color: #4758AB;">colnames</span>(model_correlation) <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"gjrGarch"</span>, <span class="st" style="color: #20794D;">"AR(1)"</span>, <span class="st" style="color: #20794D;">"Garch in mean"</span>)</span>
-<span id="cb15-5"></span>
-<span id="cb15-6"><span class="fu" style="color: #4758AB;">kable</span>(model_correlation, <span class="at" style="color: #657422;">booktabs =</span> T,</span>
-<span id="cb15-7">      <span class="at" style="color: #657422;">digits =</span> <span class="dv" style="color: #AD0000;">4</span>, <span class="at" style="color: #657422;">format =</span> <span class="st" style="color: #20794D;">"latex"</span>,</span>
-<span id="cb15-8">      <span class="at" style="color: #657422;">caption =</span> <span class="st" style="color: #20794D;">"Correlation between estimated volatilities for different specifications of Garch models"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
-<span id="cb15-9">  <span class="fu" style="color: #4758AB;">kable_styling</span>(<span class="at" style="color: #657422;">full_width =</span> T)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="co" style="color: #5E5E5E;"># Correlation between the estimated returns of the mean model and the AR(1) model</span></span>
+<span id="cb13-2">model_correlation <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">as.data.frame</span>(<span class="fu" style="color: #4758AB;">cor</span>(<span class="fu" style="color: #4758AB;">merge</span>(gjrgarchvol, ar1_vol, gim_vol)))</span>
+<span id="cb13-3"><span class="fu" style="color: #4758AB;">rownames</span>(model_correlation) <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"gjrGarch"</span>, <span class="st" style="color: #20794D;">"AR(1)"</span>, <span class="st" style="color: #20794D;">"Garch in mean"</span>)</span>
+<span id="cb13-4"><span class="fu" style="color: #4758AB;">colnames</span>(model_correlation) <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"gjrGarch"</span>, <span class="st" style="color: #20794D;">"AR(1)"</span>, <span class="st" style="color: #20794D;">"Garch in mean"</span>)</span>
+<span id="cb13-5"></span>
+<span id="cb13-6"><span class="fu" style="color: #4758AB;">kable</span>(model_correlation, <span class="at" style="color: #657422;">booktabs =</span> T,</span>
+<span id="cb13-7">      <span class="at" style="color: #657422;">digits =</span> <span class="dv" style="color: #AD0000;">4</span>,</span>
+<span id="cb13-8">      <span class="at" style="color: #657422;">caption =</span> <span class="st" style="color: #20794D;">"Correlation between estimated volatilities for different specifications of Garch models"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb13-9">  <span class="fu" style="color: #4758AB;">kable_styling</span>(<span class="at" style="color: #657422;">full_width =</span> T)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>Correlation between estimated volatilities for different specifications of Garch models</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> gjrGarch </th>
+   <th style="text-align:right;"> AR(1) </th>
+   <th style="text-align:right;"> Garch in mean </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> gjrGarch </td>
+   <td style="text-align:right;"> 1.0000 </td>
+   <td style="text-align:right;"> 0.9678 </td>
+   <td style="text-align:right;"> 0.9993 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> AR(1) </td>
+   <td style="text-align:right;"> 0.9678 </td>
+   <td style="text-align:right;"> 1.0000 </td>
+   <td style="text-align:right;"> 0.9696 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Garch in mean </td>
+   <td style="text-align:right;"> 0.9993 </td>
+   <td style="text-align:right;"> 0.9696 </td>
+   <td style="text-align:right;"> 1.0000 </td>
+  </tr>
+</tbody>
+</table>
 
 </div>
 </div>
@@ -454,49 +539,103 @@ September 5, 2022. <a href="https://cesardt97.github.io/Blog/posts/my-first-blog
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="co" style="color: #5E5E5E;"># Specification for variance targeting</span></span>
-<span id="cb16-2">targarchspec <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">ugarchspec</span>(<span class="at" style="color: #657422;">mean.model =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">armaOrder =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">0</span>,<span class="dv" style="color: #AD0000;">0</span>)),</span>
-<span id="cb16-3">                        <span class="at" style="color: #657422;">variance.model =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">model =</span> <span class="st" style="color: #20794D;">"gjrGARCH"</span>,</span>
-<span id="cb16-4">                                              <span class="at" style="color: #657422;">variance.targeting =</span> <span class="cn" style="color: #8f5902;">TRUE</span>),</span>
-<span id="cb16-5">                        <span class="at" style="color: #657422;">distribution.model =</span> <span class="st" style="color: #20794D;">"sstd"</span>)</span>
-<span id="cb16-6"></span>
-<span id="cb16-7">targarchfit <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">ugarchfit</span>(<span class="at" style="color: #657422;">data =</span> sp500ret, <span class="at" style="color: #657422;">spec =</span> targarchspec)</span>
-<span id="cb16-8"></span>
-<span id="cb16-9">targarchvol <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">sigma</span>(targarchfit)</span>
-<span id="cb16-10"></span>
-<span id="cb16-11"><span class="co" style="color: #5E5E5E;"># Compare against gjrGarch</span></span>
-<span id="cb16-12"></span>
-<span id="cb16-13"><span class="co" style="color: #5E5E5E;"># log-likelihood of the two models</span></span>
-<span id="cb16-14">likelihood_2 <span class="ot" style="color: #003B4F;">&lt;-</span> </span>
-<span id="cb16-15">  <span class="fu" style="color: #4758AB;">data.frame</span>(<span class="at" style="color: #657422;">gjrGarch =</span> <span class="fu" style="color: #4758AB;">likelihood</span>(gjrgarchfit), <span class="at" style="color: #657422;">tarGarch =</span> <span class="fu" style="color: #4758AB;">likelihood</span>(targarchfit))</span>
-<span id="cb16-16"><span class="fu" style="color: #4758AB;">rownames</span>(likelihood_2) <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="st" style="color: #20794D;">"Log-Likelihood"</span></span>
-<span id="cb16-17"></span>
-<span id="cb16-18"><span class="co" style="color: #5E5E5E;"># Information criteria</span></span>
-<span id="cb16-19">information_criteria_2 <span class="ot" style="color: #003B4F;">&lt;-</span> </span>
-<span id="cb16-20">  <span class="fu" style="color: #4758AB;">data.frame</span>(<span class="at" style="color: #657422;">gjrGarch =</span> <span class="fu" style="color: #4758AB;">infocriteria</span>(gjrgarchfit), <span class="at" style="color: #657422;">tarGarch =</span> <span class="fu" style="color: #4758AB;">infocriteria</span>(targarchfit))</span>
-<span id="cb16-21"></span>
-<span id="cb16-22"><span class="fu" style="color: #4758AB;">colnames</span>(information_criteria_2) <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"gjrGarch"</span>, <span class="st" style="color: #20794D;">"tarGarch"</span>)</span>
-<span id="cb16-23"></span>
-<span id="cb16-24"><span class="fu" style="color: #4758AB;">kable</span>(<span class="fu" style="color: #4758AB;">rbind</span>(information_criteria_2, likelihood_2), <span class="at" style="color: #657422;">booktabs =</span> T,</span>
-<span id="cb16-25">      <span class="at" style="color: #657422;">col.names =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"gjrGarch"</span>, <span class="st" style="color: #20794D;">"Volatility targeting gjrGarch"</span>),</span>
-<span id="cb16-26">      <span class="at" style="color: #657422;">digits =</span> <span class="dv" style="color: #AD0000;">4</span>, <span class="at" style="color: #657422;">format =</span> <span class="st" style="color: #20794D;">"latex"</span>,</span>
-<span id="cb16-27">      <span class="at" style="color: #657422;">caption =</span> <span class="st" style="color: #20794D;">"Information Criteria for GARCH models with volatility targeting"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
-<span id="cb16-28">  <span class="fu" style="color: #4758AB;">kable_styling</span>(<span class="at" style="color: #657422;">full_width =</span> T, <span class="at" style="color: #657422;">latex_options =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"hold_position"</span>))</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="co" style="color: #5E5E5E;"># Specification for variance targeting</span></span>
+<span id="cb14-2">targarchspec <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">ugarchspec</span>(<span class="at" style="color: #657422;">mean.model =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">armaOrder =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">0</span>,<span class="dv" style="color: #AD0000;">0</span>)),</span>
+<span id="cb14-3">                        <span class="at" style="color: #657422;">variance.model =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">model =</span> <span class="st" style="color: #20794D;">"gjrGARCH"</span>,</span>
+<span id="cb14-4">                                              <span class="at" style="color: #657422;">variance.targeting =</span> <span class="cn" style="color: #8f5902;">TRUE</span>),</span>
+<span id="cb14-5">                        <span class="at" style="color: #657422;">distribution.model =</span> <span class="st" style="color: #20794D;">"sstd"</span>)</span>
+<span id="cb14-6"></span>
+<span id="cb14-7">targarchfit <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">ugarchfit</span>(<span class="at" style="color: #657422;">data =</span> sp500ret, <span class="at" style="color: #657422;">spec =</span> targarchspec)</span>
+<span id="cb14-8"></span>
+<span id="cb14-9">targarchvol <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">sigma</span>(targarchfit)</span>
+<span id="cb14-10"></span>
+<span id="cb14-11"><span class="co" style="color: #5E5E5E;"># Compare against gjrGarch</span></span>
+<span id="cb14-12"></span>
+<span id="cb14-13"><span class="co" style="color: #5E5E5E;"># log-likelihood of the two models</span></span>
+<span id="cb14-14">likelihood_2 <span class="ot" style="color: #003B4F;">&lt;-</span> </span>
+<span id="cb14-15">  <span class="fu" style="color: #4758AB;">data.frame</span>(<span class="at" style="color: #657422;">gjrGarch =</span> <span class="fu" style="color: #4758AB;">likelihood</span>(gjrgarchfit), <span class="at" style="color: #657422;">tarGarch =</span> <span class="fu" style="color: #4758AB;">likelihood</span>(targarchfit))</span>
+<span id="cb14-16"><span class="fu" style="color: #4758AB;">rownames</span>(likelihood_2) <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="st" style="color: #20794D;">"Log-Likelihood"</span></span>
+<span id="cb14-17"></span>
+<span id="cb14-18"><span class="co" style="color: #5E5E5E;"># Information criteria</span></span>
+<span id="cb14-19">information_criteria_2 <span class="ot" style="color: #003B4F;">&lt;-</span> </span>
+<span id="cb14-20">  <span class="fu" style="color: #4758AB;">data.frame</span>(<span class="at" style="color: #657422;">gjrGarch =</span> <span class="fu" style="color: #4758AB;">infocriteria</span>(gjrgarchfit), <span class="at" style="color: #657422;">tarGarch =</span> <span class="fu" style="color: #4758AB;">infocriteria</span>(targarchfit))</span>
+<span id="cb14-21"></span>
+<span id="cb14-22"><span class="fu" style="color: #4758AB;">colnames</span>(information_criteria_2) <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"gjrGarch"</span>, <span class="st" style="color: #20794D;">"tarGarch"</span>)</span>
+<span id="cb14-23"></span>
+<span id="cb14-24"><span class="fu" style="color: #4758AB;">kable</span>(<span class="fu" style="color: #4758AB;">rbind</span>(information_criteria_2, likelihood_2), <span class="at" style="color: #657422;">booktabs =</span> T,</span>
+<span id="cb14-25">      <span class="at" style="color: #657422;">col.names =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"gjrGarch"</span>, <span class="st" style="color: #20794D;">"Volatility targeting gjrGarch"</span>),</span>
+<span id="cb14-26">      <span class="at" style="color: #657422;">digits =</span> <span class="dv" style="color: #AD0000;">4</span>,</span>
+<span id="cb14-27">      <span class="at" style="color: #657422;">caption =</span> <span class="st" style="color: #20794D;">"Information Criteria for GARCH models with volatility targeting"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb14-28">  <span class="fu" style="color: #4758AB;">kable_styling</span>(<span class="at" style="color: #657422;">full_width =</span> T)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>Information Criteria for GARCH models with volatility targeting</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> gjrGarch </th>
+   <th style="text-align:right;"> Volatility targeting gjrGarch </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Akaike </td>
+   <td style="text-align:right;"> -6.6531 </td>
+   <td style="text-align:right;"> -6.6532 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Bayes </td>
+   <td style="text-align:right;"> -6.6472 </td>
+   <td style="text-align:right;"> -6.6482 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Shibata </td>
+   <td style="text-align:right;"> -6.6531 </td>
+   <td style="text-align:right;"> -6.6532 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Hannan-Quinn </td>
+   <td style="text-align:right;"> -6.6511 </td>
+   <td style="text-align:right;"> -6.6515 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Log-Likelihood </td>
+   <td style="text-align:right;"> 27840.3342 </td>
+   <td style="text-align:right;"> 27839.8445 </td>
+  </tr>
+</tbody>
+</table>
 
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><span class="co" style="color: #5E5E5E;"># Implied long term volatility</span></span>
-<span id="cb17-2"><span class="fu" style="color: #4758AB;">kable</span>(<span class="fu" style="color: #4758AB;">data.frame</span>(<span class="at" style="color: #657422;">Garch =</span> <span class="fu" style="color: #4758AB;">sqrt</span>(<span class="fu" style="color: #4758AB;">uncvariance</span>(garchfit)), </span>
-<span id="cb17-3">                 <span class="at" style="color: #657422;">tarGarch =</span> <span class="fu" style="color: #4758AB;">sqrt</span>(<span class="fu" style="color: #4758AB;">uncvariance</span>(targarchfit))), </span>
-<span id="cb17-4">      <span class="at" style="color: #657422;">col.names =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"Simple GARCH model"</span>, <span class="st" style="color: #20794D;">"GJR-Garch model with volatility targeting"</span>), </span>
-<span id="cb17-5">      <span class="at" style="color: #657422;">format =</span> <span class="st" style="color: #20794D;">"latex"</span>, <span class="at" style="color: #657422;">digits =</span> <span class="dv" style="color: #AD0000;">4</span>, <span class="at" style="color: #657422;">booktabs =</span> T,</span>
-<span id="cb17-6">      <span class="at" style="color: #657422;">caption =</span> <span class="st" style="color: #20794D;">"Implied long-term volatility"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb17-7">  <span class="fu" style="color: #4758AB;">kable_styling</span>(<span class="at" style="color: #657422;">full_width =</span> T, <span class="at" style="color: #657422;">latex_options =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"hold_position"</span>))</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="co" style="color: #5E5E5E;"># Implied long term volatility</span></span>
+<span id="cb15-2"><span class="fu" style="color: #4758AB;">kable</span>(<span class="fu" style="color: #4758AB;">data.frame</span>(<span class="at" style="color: #657422;">Garch =</span> <span class="fu" style="color: #4758AB;">sqrt</span>(<span class="fu" style="color: #4758AB;">uncvariance</span>(garchfit)), </span>
+<span id="cb15-3">                 <span class="at" style="color: #657422;">tarGarch =</span> <span class="fu" style="color: #4758AB;">sqrt</span>(<span class="fu" style="color: #4758AB;">uncvariance</span>(targarchfit))), </span>
+<span id="cb15-4">      <span class="at" style="color: #657422;">col.names =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"Simple GARCH model"</span>, <span class="st" style="color: #20794D;">"GJR-Garch model with volatility targeting"</span>), </span>
+<span id="cb15-5">      <span class="at" style="color: #657422;">digits =</span> <span class="dv" style="color: #AD0000;">4</span>, <span class="at" style="color: #657422;">booktabs =</span> T,</span>
+<span id="cb15-6">      <span class="at" style="color: #657422;">caption =</span> <span class="st" style="color: #20794D;">"Implied long-term volatility"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
+<span id="cb15-7">  <span class="fu" style="color: #4758AB;">kable_styling</span>(<span class="at" style="color: #657422;">full_width =</span> T)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>Implied long-term volatility</caption>
+ <thead>
+  <tr>
+   <th style="text-align:right;"> Simple GARCH model </th>
+   <th style="text-align:right;"> GJR-Garch model with volatility targeting </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 0.0109 </td>
+   <td style="text-align:right;"> 0.0113 </td>
+  </tr>
+</tbody>
+</table>
 
 </div>
 </div>
@@ -504,28 +643,28 @@ September 5, 2022. <a href="https://cesardt97.github.io/Blog/posts/my-first-blog
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><span class="co" style="color: #5E5E5E;"># Specification for garch on movable windows</span></span>
-<span id="cb18-2">rollgarchspec <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">ugarchspec</span>(<span class="at" style="color: #657422;">mean.model =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">armaOrder =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">0</span>,<span class="dv" style="color: #AD0000;">0</span>)),</span>
-<span id="cb18-3">                        <span class="at" style="color: #657422;">variance.model =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">model =</span> <span class="st" style="color: #20794D;">"gjrGARCH"</span>,</span>
-<span id="cb18-4">                                              <span class="at" style="color: #657422;">variance.targeting =</span> <span class="cn" style="color: #8f5902;">TRUE</span>),</span>
-<span id="cb18-5">                        <span class="at" style="color: #657422;">distribution.model =</span> <span class="st" style="color: #20794D;">"sstd"</span>)</span>
-<span id="cb18-6"></span>
-<span id="cb18-7">rollgarchfit <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">ugarchroll</span>(garchspec, </span>
-<span id="cb18-8">                           <span class="at" style="color: #657422;">data =</span> sp500ret,</span>
-<span id="cb18-9">                           <span class="at" style="color: #657422;">n.start =</span> <span class="dv" style="color: #AD0000;">2000</span>, <span class="at" style="color: #657422;">refit.window =</span> <span class="st" style="color: #20794D;">"moving"</span>,  <span class="at" style="color: #657422;">refit.every =</span> <span class="dv" style="color: #AD0000;">500</span>)</span>
-<span id="cb18-10"></span>
-<span id="cb18-11"><span class="co" style="color: #5E5E5E;"># Mobile predictions</span></span>
-<span id="cb18-12">preds <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">as.data.frame</span>(rollgarchfit)</span>
-<span id="cb18-13"></span>
-<span id="cb18-14"><span class="co" style="color: #5E5E5E;"># Comparison of the estimated volatility in the in-sample model and the moving model</span></span>
-<span id="cb18-15">garchvolroll <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">xts</span>(preds<span class="sc" style="color: #5E5E5E;">$</span>Sigma, <span class="at" style="color: #657422;">order.by =</span> <span class="fu" style="color: #4758AB;">as.Date</span>(<span class="fu" style="color: #4758AB;">rownames</span>(preds)))</span>
-<span id="cb18-16">volplot <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">plot</span>(gjrgarchvol, <span class="at" style="color: #657422;">col =</span> <span class="st" style="color: #20794D;">"darkgrey"</span>, <span class="at" style="color: #657422;">lwd =</span> <span class="fl" style="color: #AD0000;">1.5</span>, </span>
-<span id="cb18-17">                <span class="at" style="color: #657422;">main =</span> <span class="st" style="color: #20794D;">"In-sample and moving window volatility forecasts"</span>)</span>
-<span id="cb18-18">volplot <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">addSeries</span>(garchvolroll, <span class="at" style="color: #657422;">col =</span> <span class="st" style="color: #20794D;">"blue"</span>, <span class="at" style="color: #657422;">on =</span> <span class="dv" style="color: #AD0000;">1</span>)</span>
-<span id="cb18-19"><span class="fu" style="color: #4758AB;">plot</span>(volplot)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="co" style="color: #5E5E5E;"># Specification for garch on movable windows</span></span>
+<span id="cb16-2">rollgarchspec <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">ugarchspec</span>(<span class="at" style="color: #657422;">mean.model =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">armaOrder =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="dv" style="color: #AD0000;">0</span>,<span class="dv" style="color: #AD0000;">0</span>)),</span>
+<span id="cb16-3">                        <span class="at" style="color: #657422;">variance.model =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">model =</span> <span class="st" style="color: #20794D;">"gjrGARCH"</span>,</span>
+<span id="cb16-4">                                              <span class="at" style="color: #657422;">variance.targeting =</span> <span class="cn" style="color: #8f5902;">TRUE</span>),</span>
+<span id="cb16-5">                        <span class="at" style="color: #657422;">distribution.model =</span> <span class="st" style="color: #20794D;">"sstd"</span>)</span>
+<span id="cb16-6"></span>
+<span id="cb16-7">rollgarchfit <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">ugarchroll</span>(garchspec, </span>
+<span id="cb16-8">                           <span class="at" style="color: #657422;">data =</span> sp500ret,</span>
+<span id="cb16-9">                           <span class="at" style="color: #657422;">n.start =</span> <span class="dv" style="color: #AD0000;">2000</span>, <span class="at" style="color: #657422;">refit.window =</span> <span class="st" style="color: #20794D;">"moving"</span>,  <span class="at" style="color: #657422;">refit.every =</span> <span class="dv" style="color: #AD0000;">500</span>)</span>
+<span id="cb16-10"></span>
+<span id="cb16-11"><span class="co" style="color: #5E5E5E;"># Mobile predictions</span></span>
+<span id="cb16-12">preds <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">as.data.frame</span>(rollgarchfit)</span>
+<span id="cb16-13"></span>
+<span id="cb16-14"><span class="co" style="color: #5E5E5E;"># Comparison of the estimated volatility in the in-sample model and the moving model</span></span>
+<span id="cb16-15">garchvolroll <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">xts</span>(preds<span class="sc" style="color: #5E5E5E;">$</span>Sigma, <span class="at" style="color: #657422;">order.by =</span> <span class="fu" style="color: #4758AB;">as.Date</span>(<span class="fu" style="color: #4758AB;">rownames</span>(preds)))</span>
+<span id="cb16-16">volplot <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">plot</span>(gjrgarchvol, <span class="at" style="color: #657422;">col =</span> <span class="st" style="color: #20794D;">"darkgrey"</span>, <span class="at" style="color: #657422;">lwd =</span> <span class="fl" style="color: #AD0000;">1.5</span>, </span>
+<span id="cb16-17">                <span class="at" style="color: #657422;">main =</span> <span class="st" style="color: #20794D;">"In-sample and moving window volatility forecasts"</span>)</span>
+<span id="cb16-18">volplot <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">addSeries</span>(garchvolroll, <span class="at" style="color: #657422;">col =</span> <span class="st" style="color: #20794D;">"blue"</span>, <span class="at" style="color: #657422;">on =</span> <span class="dv" style="color: #AD0000;">1</span>)</span>
+<span id="cb16-19"><span class="fu" style="color: #4758AB;">plot</span>(volplot)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="https://cesardt97.github.io/posts/volatility-financial-asset/2022-08-30_volatility_financial_asset_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+<p><img src="https://cesardt97.github.io/posts/volatility-financial-asset/2022-08-30_volatility_financial_asset_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Tactical Asset Allocation using Target Volatility** **Targeted Volatility</p>
@@ -533,19 +672,19 @@ September 5, 2022. <a href="https://cesardt97.github.io/Blog/posts/my-first-blog
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><span class="co" style="color: #5E5E5E;"># Annualized volatility from gjrGARCH moving window model with </span></span>
-<span id="cb19-2"><span class="co" style="color: #5E5E5E;"># asymmetric t-Student distribution</span></span>
-<span id="cb19-3">estimated_annualized_volatility <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">sqrt</span>(<span class="dv" style="color: #AD0000;">252</span>)<span class="sc" style="color: #5E5E5E;">*</span>garchvolroll</span>
-<span id="cb19-4"></span>
-<span id="cb19-5"><span class="co" style="color: #5E5E5E;"># Calculate the weights assigned to the risky asset with a target volatility of 5% per year. </span></span>
-<span id="cb19-6">weight <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fl" style="color: #AD0000;">0.05</span> <span class="sc" style="color: #5E5E5E;">/</span> estimated_annualized_volatility</span>
-<span id="cb19-7"></span>
-<span id="cb19-8"><span class="co" style="color: #5E5E5E;"># Compare the annualized volatility with the portfolio's weights</span></span>
-<span id="cb19-9"><span class="fu" style="color: #4758AB;">plot</span>(<span class="fu" style="color: #4758AB;">merge</span>(estimated_annualized_volatility, weight), <span class="at" style="color: #657422;">multi.panel =</span> <span class="cn" style="color: #8f5902;">TRUE</span>,</span>
-<span id="cb19-10">     <span class="at" style="color: #657422;">main =</span> <span class="st" style="color: #20794D;">"Annualized vol. and the risk asset allocation weights"</span>)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><span class="co" style="color: #5E5E5E;"># Annualized volatility from gjrGARCH moving window model with </span></span>
+<span id="cb17-2"><span class="co" style="color: #5E5E5E;"># asymmetric t-Student distribution</span></span>
+<span id="cb17-3">estimated_annualized_volatility <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">sqrt</span>(<span class="dv" style="color: #AD0000;">252</span>)<span class="sc" style="color: #5E5E5E;">*</span>garchvolroll</span>
+<span id="cb17-4"></span>
+<span id="cb17-5"><span class="co" style="color: #5E5E5E;"># Calculate the weights assigned to the risky asset with a target volatility of 5% per year. </span></span>
+<span id="cb17-6">weight <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fl" style="color: #AD0000;">0.05</span> <span class="sc" style="color: #5E5E5E;">/</span> estimated_annualized_volatility</span>
+<span id="cb17-7"></span>
+<span id="cb17-8"><span class="co" style="color: #5E5E5E;"># Compare the annualized volatility with the portfolio's weights</span></span>
+<span id="cb17-9"><span class="fu" style="color: #4758AB;">plot</span>(<span class="fu" style="color: #4758AB;">merge</span>(estimated_annualized_volatility, weight), <span class="at" style="color: #657422;">multi.panel =</span> <span class="cn" style="color: #8f5902;">TRUE</span>,</span>
+<span id="cb17-10">     <span class="at" style="color: #657422;">main =</span> <span class="st" style="color: #20794D;">"Annualized vol. and the risk asset allocation weights"</span>)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="https://cesardt97.github.io/posts/volatility-financial-asset/2022-08-30_volatility_financial_asset_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+<p><img src="https://cesardt97.github.io/posts/volatility-financial-asset/2022-08-30_volatility_financial_asset_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>In the above chart it is easy to observe the dynamics of asset allocation within a portfolio. In our portfolio composed of U.S. treasury bills and the S&amp;P500, since treasury bills are risk-free, the question that arises is what weight should be assigned to the S&amp;P500 within the portfolio given the risk exposure constraint we impose on ourselves. By March 2022, the model recommends a portfolio with approximately 20% exposure to the S&amp;P500 and 80% in risk-free assets with a target volatility of 5%.</p>
@@ -554,21 +693,21 @@ September 5, 2022. <a href="https://cesardt97.github.io/Blog/posts/my-first-blog
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><span class="co" style="color: #5E5E5E;"># 5% Value at Risk</span></span>
-<span id="cb20-2">garchVaR <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">quantile</span>(rollgarchfit, <span class="at" style="color: #657422;">probs =</span> <span class="fl" style="color: #AD0000;">0.05</span>)</span>
-<span id="cb20-3"></span>
-<span id="cb20-4"><span class="co" style="color: #5E5E5E;"># Volatility for Value at Risk</span></span>
-<span id="cb20-5">garchvolroll_var <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">xts</span>(preds<span class="sc" style="color: #5E5E5E;">$</span>Sigma, <span class="at" style="color: #657422;">order.by =</span> <span class="fu" style="color: #4758AB;">time</span>(garchVaR))</span>
-<span id="cb20-6"></span>
-<span id="cb20-7"><span class="co" style="color: #5E5E5E;"># Visual analysis of movements</span></span>
-<span id="cb20-8">garchplot <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">plot</span>(garchvolroll_var, <span class="at" style="color: #657422;">ylim =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="sc" style="color: #5E5E5E;">-</span><span class="fl" style="color: #AD0000;">0.1</span>, <span class="fl" style="color: #AD0000;">0.1</span>), </span>
-<span id="cb20-9">     <span class="at" style="color: #657422;">main =</span> <span class="st" style="color: #20794D;">"Daily volatility and 5% VaR"</span>)</span>
-<span id="cb20-10">garchplot <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">addSeries</span>(garchVaR, <span class="at" style="color: #657422;">on =</span> <span class="dv" style="color: #AD0000;">1</span>, <span class="at" style="color: #657422;">col =</span> <span class="st" style="color: #20794D;">"blue"</span>)</span>
-<span id="cb20-11"><span class="fu" style="color: #4758AB;">plot</span>(garchplot, </span>
-<span id="cb20-12">     <span class="at" style="color: #657422;">main =</span> <span class="st" style="color: #20794D;">"Daily volatility and 5% VaR"</span>)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><span class="co" style="color: #5E5E5E;"># 5% Value at Risk</span></span>
+<span id="cb18-2">garchVaR <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">quantile</span>(rollgarchfit, <span class="at" style="color: #657422;">probs =</span> <span class="fl" style="color: #AD0000;">0.05</span>)</span>
+<span id="cb18-3"></span>
+<span id="cb18-4"><span class="co" style="color: #5E5E5E;"># Volatility for Value at Risk</span></span>
+<span id="cb18-5">garchvolroll_var <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">xts</span>(preds<span class="sc" style="color: #5E5E5E;">$</span>Sigma, <span class="at" style="color: #657422;">order.by =</span> <span class="fu" style="color: #4758AB;">time</span>(garchVaR))</span>
+<span id="cb18-6"></span>
+<span id="cb18-7"><span class="co" style="color: #5E5E5E;"># Visual analysis of movements</span></span>
+<span id="cb18-8">garchplot <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">plot</span>(garchvolroll_var, <span class="at" style="color: #657422;">ylim =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="sc" style="color: #5E5E5E;">-</span><span class="fl" style="color: #AD0000;">0.1</span>, <span class="fl" style="color: #AD0000;">0.1</span>), </span>
+<span id="cb18-9">     <span class="at" style="color: #657422;">main =</span> <span class="st" style="color: #20794D;">"Daily volatility and 5% VaR"</span>)</span>
+<span id="cb18-10">garchplot <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">addSeries</span>(garchVaR, <span class="at" style="color: #657422;">on =</span> <span class="dv" style="color: #AD0000;">1</span>, <span class="at" style="color: #657422;">col =</span> <span class="st" style="color: #20794D;">"blue"</span>)</span>
+<span id="cb18-11"><span class="fu" style="color: #4758AB;">plot</span>(garchplot, </span>
+<span id="cb18-12">     <span class="at" style="color: #657422;">main =</span> <span class="st" style="color: #20794D;">"Daily volatility and 5% VaR"</span>)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="https://cesardt97.github.io/posts/volatility-financial-asset/2022-08-30_volatility_financial_asset_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+<p><img src="https://cesardt97.github.io/posts/volatility-financial-asset/2022-08-30_volatility_financial_asset_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>The high co-movement between the two series is notorious. The intuition is that, if volatility soars, there is a risk of losing more money. That is why the value at risk also becomes more extreme. In March 2022, the value at risk of this portfolio is 1.95%, or almost $20 for every $1,000 invested in the risky asset.</p>
@@ -590,12 +729,12 @@ September 5, 2022. <a href="https://cesardt97.github.io/Blog/posts/my-first-blog
   author = {César Díaz Tavera},
   title = {Analyzing the Volatility of the {Standard} and {Poor’s} 500},
   date = {2022-08-30},
-  url = {https://cesardt97.github.io/Blog/posts/my-first-blog},
+  url = {https://cesardt97.github.io/Blog/posts/volatility-financial-asset/2022-08-30_volatility_financial_asset.html},
   langid = {en}
 }
 </code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-díaztavera2022" class="csl-entry quarto-appendix-citeas">
 César Díaz Tavera. 2022. <span>“Analyzing the Volatility of the Standard
-and Poor’s 500.”</span> August 30, 2022. <a href="https://cesardt97.github.io/Blog/posts/my-first-blog">https://cesardt97.github.io/Blog/posts/my-first-blog</a>.
+and Poor’s 500.”</span> August 30, 2022. <a href="https://cesardt97.github.io/Blog/posts/volatility-financial-asset/2022-08-30_volatility_financial_asset.html">https://cesardt97.github.io/Blog/posts/volatility-financial-asset/2022-08-30_volatility_financial_asset.html</a>.
 </div></div></section></div> ]]></description>
   <category>Financial Econometric</category>
   <category>GARCH</category>

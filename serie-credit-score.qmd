@@ -6,7 +6,7 @@ draft: false
 listing:
     contents: posts/series-sc
     type: default
-    fields: [image, date, title, subtitle, categories, author, reading-time]  
+    fields: [image, date, title, description, categories, author, reading-time]
     sort: "date desc"
     categories: false
     sort-ui: false
