@@ -19,7 +19,7 @@ This blog is a repository where I share ideas, codes or articles of my own opini
 You can find me on [LinkedIn](www.linkedin.com/in/cesar-diaz-tavera),
 [GitHub](https://github.com/cesardt97) or reach out via [email](mailto:cesartavera.cloud@gmail.com).
 
-[**Read lastest posts**](home.qmd)
+[**Read latest posts**](home.qmd)
 
 :::
 
